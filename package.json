@@ -1,0 +1,17 @@
+{
+  "name": "pflix-valdez",
+  "private": true,
+  "workspaces": [
+    "server",
+    "webclient"
+  ],
+  "scripts": {
+    "app": "npm run start --workspace=webclient",
+    "server": "npm run -w server serve",
+    "start": "concurrently --kill-others-on-fail \"npm run app\"  \"npm run server\"",
+    "start:server": "npm run -w server start"
+  },
+  "dependencies": {
+    "concurrently": "^6.4.0"
+  }
+}
