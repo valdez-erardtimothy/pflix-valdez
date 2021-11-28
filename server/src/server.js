@@ -6,6 +6,6 @@ require('dotenv').config({ path: path.resolve(__dirname, "config/.env") });
 const app = require('./express-app.js');
 
 const APP_PORT = process.env.PORT || 5000;
-const server = app.listen(APP_PORT, function () {
+app.listen(APP_PORT, function () {
   console.log(`pflix API is up on port ${APP_PORT}`);
 });

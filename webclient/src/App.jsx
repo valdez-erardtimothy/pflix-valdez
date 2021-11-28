@@ -6,7 +6,7 @@ async function testConnectMessage() {
   const { data }= await axios.get('/api/test');
   console.debug(data.message);
   return data.message;
-};
+}
 
 function App() {
   const message = testConnectMessage();

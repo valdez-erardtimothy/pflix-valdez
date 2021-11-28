@@ -25,6 +25,6 @@ const ROUTES_PATH = 'routes';
 fs.readdirSync(path.resolve(__dirname, ROUTES_PATH)).forEach(filename => {
   const router = require(`./${ROUTES_PATH}/` + filename);
   app.use(ROUTE_PREFIX, router);
-})
+});
 
 module.exports = app;
