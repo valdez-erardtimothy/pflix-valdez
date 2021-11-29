@@ -1,31 +1,14 @@
 import React from 'react';
-import axios from 'axios';
-
-async function testConnectMessage() {
-  
-  const { data }= await axios.get('/api/test');
-  console.debug(data.message);
-  return data.message;
-}
+import {Button} from 'react-bootstrap';
 
 function App() {
-  const message = testConnectMessage();
-  console.debug(message);
   return (
-    <div className="App">
+    <div className="App container-fluid">
       <header className="App-header">
         <p>
-          Edit <code>src/App.js</code> and save to reload.
+          Edit <code>src/App.jsx</code> and save to reload.
         </p>
-        <p>{typeof(message)}</p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
+        <Button variant="dark" className="shadow">I&apos;m a bootstrap button</Button>
       </header>
     </div>
   );
