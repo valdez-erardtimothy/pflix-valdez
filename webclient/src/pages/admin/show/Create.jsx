@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { Button, Form, FloatingLabel } from 'react-bootstrap';
 import SeparatedDateInput from '../../../components/form_components/SeparatedDateInput';
 import axios from 'axios';
+import {Helmet} from 'react-helmet';
 export default function Create() {
   // temporarily disable eslint while form not submittable
   /* eslint-disable no-unused-vars */
@@ -41,6 +42,9 @@ export default function Create() {
   };
 
   return(<>
+    <Helmet>
+      <title>Add a Show</title>
+    </Helmet>
     <h3>Add a new show </h3>
     <h6><Link to="/movies">Back to list</Link></h6>
     <Form onSubmit={submitHandler}>
