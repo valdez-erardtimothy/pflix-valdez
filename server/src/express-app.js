@@ -1,10 +1,13 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const app = express();
-
 app.use(express.json());
-
+app.use(express.urlencoded({extended:true}));
+app.use(fileUpload());
+// app.use(bodyParser.urlencoded({extended:true}));
+// app.use(bodyParser.json());
 // register all routers on /routes
 
 /**
