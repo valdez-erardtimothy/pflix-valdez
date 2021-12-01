@@ -7,11 +7,18 @@ import MainLayout from './layouts/Main.jsx';
 
 import reportWebVitals from './reportWebVitals';
 
+import MovieList from './pages/admin/show/List.jsx';
+import CreateMovie from './pages/admin/show/Create.jsx';
+
 const routes = <>
   <Route to="/" element={<MainLayout/>}>
     <Route index element={<App/>}/>
-    <Route path="movies">
-      
+    <Route path="admin">
+      <Route path="shows">
+        <Route index element={<MovieList/>}/>
+        <Route path="create" element={<CreateMovie/>}/>
+      </Route>
+
     </Route>
   </Route>
 </>;
