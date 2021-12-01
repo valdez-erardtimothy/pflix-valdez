@@ -46,7 +46,7 @@ export default function Create() {
       <title>Add a Show</title>
     </Helmet>
     <h3>Add a new show </h3>
-    <h6><Link to="/movies">Back to list</Link></h6>
+    <h6><Link to="/admin/shows">Back to list</Link></h6>
     <Form onSubmit={submitHandler}>
       <FloatingLabel 
         className="mb-4" 

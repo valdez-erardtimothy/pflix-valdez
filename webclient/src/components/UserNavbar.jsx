@@ -8,7 +8,7 @@ export default function MainNavbar() {
     <Navbar.Toggle aria-controls="basic-navbar-nav" />
     <Nav>
       <Navbar.Collapse>
-        <Nav.Link as={Link} to="/admin/shows">Shows</Nav.Link>
+        <Nav.Link as={Link} to="/shows">Shows</Nav.Link>
       </Navbar.Collapse>
     </Nav>
   </Navbar>;

@@ -2,9 +2,9 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
-import App from './App.jsx';
+import Home from './pages/Home.jsx';
 import MainLayout from './layouts/Main.jsx';
-
+import AdminLayout from './layouts/Admin.jsx';
 import reportWebVitals from './reportWebVitals';
 
 import MovieList from './pages/admin/show/List.jsx';
@@ -12,14 +12,14 @@ import CreateMovie from './pages/admin/show/Create.jsx';
 
 const routes = <>
   <Route to="/" element={<MainLayout/>}>
-    <Route index element={<App/>}/>
-    <Route path="admin">
-      <Route path="shows">
-        <Route index element={<MovieList/>}/>
-        <Route path="create" element={<CreateMovie/>}/>
-      </Route>
-
+    <Route index element={<Home/>}/>
+  </Route>
+  <Route path="admin" element={<AdminLayout/>}>
+    <Route path="shows">
+      <Route index element={<MovieList/>}/>
+      <Route path="create" element={<CreateMovie/>}/>
     </Route>
+
   </Route>
 </>;
 
