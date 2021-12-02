@@ -8,8 +8,15 @@ showController.list = async(req, res )=> {
 };
 
 showController.read = async(req,res)=> {
-  let {id} = req.body;
-  show.findOne({_id:id});
+  let {id} = req.params;
+  show.findById(id, function(err,data) {
+    if(err) {
+      res.send(err);
+    } else {
+      console.debug(data);
+      res.send({show:data});
+    }
+  });
 };
 
 showController.create = (req, res)=> {

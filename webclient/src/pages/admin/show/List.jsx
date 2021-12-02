@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, {useState, useEffect } from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {Button,Table} from 'react-bootstrap';
-
+import {Helmet} from 'react-helmet';
 
 export default function List() {
   let [shows, setShows] = useState([]);
@@ -25,6 +25,9 @@ export default function List() {
 
   return(
     <>
+      <Helmet>
+        <title>Shows</title>
+      </Helmet>
       <main className="container-fluid">
         <h1>Shows
           <Link 
@@ -50,8 +53,12 @@ export default function List() {
                   let hours = Math.floor(show.runtimeMinutes/60);
                   let minutes = Math.floor(show.runtimeMinutes%60);
                   return (
-                    <tr key={show.id}>
-                      <td>{show.title}</td>
+                    <tr key={show._id}>
+                      <td>
+                        <Link to={`/admin/shows/${show._id}`}>
+                          {show.title}
+                        </Link>
+                      </td>
                       <td>{new Date(show.released).toDateString()}</td>
                       <td>{hours>0?`${hours} hour/s `:""}{minutes} Minutes</td>
                       <td>
@@ -80,7 +87,7 @@ export default function List() {
           </Table>
         </>) : (
           <div >
-            <p>No showss added yet</p>
+            <p>No shows added yet</p>
           </div>
         )} 
       </main>

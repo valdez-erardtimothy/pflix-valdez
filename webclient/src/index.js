@@ -7,17 +7,18 @@ import MainLayout from './layouts/Main.jsx';
 import AdminLayout from './layouts/Admin.jsx';
 import reportWebVitals from './reportWebVitals';
 
-import MovieList from './pages/admin/show/List.jsx';
-import CreateMovie from './pages/admin/show/Create.jsx';
-
+import ShowList from './pages/admin/show/List.jsx';
+import CreateShow from './pages/admin/show/Create.jsx';
+import ReadShow from './pages/admin/show/Read.jsx';
 const routes = <>
   <Route to="/" element={<MainLayout/>}>
     <Route index element={<Home/>}/>
   </Route>
   <Route path="admin" element={<AdminLayout/>}>
     <Route path="shows">
-      <Route index element={<MovieList/>}/>
-      <Route path="create" element={<CreateMovie/>}/>
+      <Route index element={<ShowList/>}/>
+      <Route path="create" element={<CreateShow/>}/>
+      <Route path=":id" element={<ReadShow/>}/>
     </Route>
 
   </Route>
