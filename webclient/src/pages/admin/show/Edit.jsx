@@ -57,7 +57,6 @@ export default function Edit()  {
     editShowData.set('showType', showType);
     editShowData.set('plot',plot);
     [...images].forEach(img=>editShowData.append('images', img));
-    console.debug(editShowData);
     
 
     axios.patch(`/api/admin/shows/${id}`, editShowData).then(

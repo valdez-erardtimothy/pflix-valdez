@@ -19,16 +19,29 @@ showController.read = async (req, res) => {
   });
 };
 
-showController.create = (req, res) => {
+showController.create = async (req, res) => {
   let { title, released, runtimeMinutes, plot, showType } = req.body;
   console.debug("body:", req.body);
+  let uploads = req.files.images;
+  let imgPaths = [];
+  if (uploads !== undefined) {
+    if (!Array.isArray(uploads)) {
+      uploads = [uploads]
+    }
+
+    await Promise.all(uploads.map(async (img) => {
+      imgPaths.push(await saveUpload(img, 'uploads/shows'));
+    }))
+
+  }
 
   show.create({
     title: title,
     released: released,
     runtimeMinutes: runtimeMinutes,
     plot: plot,
-    showType: showType
+    showType: showType,
+    images: imgPaths
   }, function (err, data) {
     if (err) res.status(422).send({
       error: err,
@@ -61,14 +74,12 @@ showController.update = async (req, res) => {
     }
 
     await Promise.all(uploads.map(async (img) => {
-      images.push(await saveUpload(img, 'uploads/films'));
+      images.push(await saveUpload(img, 'uploads/shows'));
     }))
     console.debug("image data:", images)
     formData = { ...formData, images }
     console.debug("form data:", formData)
 
-  } else {
-    console.debug("no upload")
   }
 
   console.debug("request images:", req.files);

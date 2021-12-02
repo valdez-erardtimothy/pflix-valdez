@@ -15,6 +15,7 @@ export default function Create() {
   let [plot, setPlot] = useState("");
   let [showType, setShowType] = useState("Movie");  
   let [poster, setPoster] = useState("");
+  let [images, setImages] = useState('');
 
   let navigate = useNavigate(); 
 
@@ -36,8 +37,8 @@ export default function Create() {
     createShowData.set('showType', showType);
     createShowData.set('plot',plot);
     createShowData.set('poster', poster);
-    console.debug("createmoviedata:");
-    console.debug(createShowData);
+    [...images].forEach(img=>createShowData.append('images', img));
+
     
 
     axios.post('/api/admin/shows', createShowData).then(
@@ -125,11 +126,18 @@ export default function Create() {
           <option value="Movie">Movie</option>
         </Form.Select>
       </FloatingLabel>
-      <Form.Group controlId="createShowPoster">
-        <Form.Label>Poster</Form.Label>
-        <Form.Control 
-          type="file" name="createShowPoster"
-          onChange={(e)=>setPoster(e.target.files[0])}/>
+      <Form.Group 
+        controlId="editShowImages"
+        className="mb-3"
+      >
+        <Form.Label>Images</Form.Label>
+        <Form.Control
+          name="images"
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={e=>setImages(e.target.files)}
+        />
       </Form.Group>
       <Button type="submit">Add</Button>
     </Form>
