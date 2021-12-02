@@ -2,7 +2,7 @@ import axios from 'axios';
 import React, {useState, useEffect } from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {Button,Table} from 'react-bootstrap';
-import {Helmet} from 'react-helmet';
+import {Helmet} from 'react-helmet-async';
 
 export default function List() {
   let [shows, setShows] = useState([]);

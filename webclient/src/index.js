@@ -2,6 +2,7 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
+import { HelmetProvider } from 'react-helmet-async';
 import Home from './pages/Home.jsx';
 import MainLayout from './layouts/Main.jsx';
 import AdminLayout from './layouts/Admin.jsx';
@@ -31,9 +32,11 @@ const routes = <>
 ReactDOM.render(
   <React.StrictMode>
     <BrowserRouter>
-      <Routes>
-        {routes}
-      </Routes>
+      <HelmetProvider>
+        <Routes>
+          {routes}
+        </Routes>
+      </HelmetProvider>
     </BrowserRouter>
   </React.StrictMode>,
   document.getElementById('root')

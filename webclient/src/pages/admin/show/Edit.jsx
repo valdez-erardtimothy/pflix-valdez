@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from 'react';
 import {Link, useParams, useNavigate} from 'react-router-dom';
 import axios from 'axios';
-import {Helmet} from 'react-helmet';
+import {Helmet} from 'react-helmet-async';
 import {Button, Form, FloatingLabel} from 'react-bootstrap';
 import SeparatedDateInput from '../../../components/form_components/SeparatedDateInput';
 export default function Edit()  {
