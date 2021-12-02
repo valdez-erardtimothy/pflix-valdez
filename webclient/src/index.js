@@ -10,6 +10,7 @@ import reportWebVitals from './reportWebVitals';
 import ShowList from './pages/admin/show/List.jsx';
 import CreateShow from './pages/admin/show/Create.jsx';
 import ReadShow from './pages/admin/show/Read.jsx';
+import EditShow from './pages/admin/show/Edit.jsx';
 const routes = <>
   <Route to="/" element={<MainLayout/>}>
     <Route index element={<Home/>}/>
@@ -18,7 +19,10 @@ const routes = <>
     <Route path="shows">
       <Route index element={<ShowList/>}/>
       <Route path="create" element={<CreateShow/>}/>
-      <Route path=":id" element={<ReadShow/>}/>
+      <Route path=":id">
+        <Route index element={<ReadShow/>}/>
+        <Route path="edit" element={<EditShow/>}/>
+      </Route>
     </Route>
 
   </Route>

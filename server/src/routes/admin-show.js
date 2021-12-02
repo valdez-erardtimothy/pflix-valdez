@@ -5,7 +5,8 @@ const {
   list,
   create,
   destroy,
-  read
+  read,
+  update
 } = require("../controllers/admin/showController");
 
 router.route('/admin/shows')
@@ -14,5 +15,6 @@ router.route('/admin/shows')
 
 router.route('/admin/shows/:id')
   .get(read)
-  .delete(destroy);
+  .delete(destroy)
+  .patch(update);
 module.exports = router;
