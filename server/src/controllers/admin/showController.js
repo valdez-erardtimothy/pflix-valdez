@@ -1,5 +1,5 @@
 const show = require('../../models/show.js');
-
+const { saveUpload } = require('../../utils/assetHandler');
 const showController = {};
 
 showController.list = async (req, res) => {
@@ -22,6 +22,7 @@ showController.read = async (req, res) => {
 showController.create = (req, res) => {
   let { title, released, runtimeMinutes, plot, showType } = req.body;
   console.debug("body:", req.body);
+
   show.create({
     title: title,
     released: released,
@@ -51,7 +52,26 @@ showController.destroy = async (req, res) => {
 showController.update = async (req, res) => {
   let { id } = req.params;
   let formData = req.body;
-  console.debug('form data:', formData)
+  let showData = show.findById(id);
+  let images = showData.images || [];
+  let uploads = req.files?.images;
+  if (uploads !== undefined) {
+    if (!Array.isArray(uploads)) {
+      uploads = [uploads]
+    }
+
+    await Promise.all(uploads.map(async (img) => {
+      images.push(await saveUpload(img, 'uploads/films'));
+    }))
+    console.debug("image data:", images)
+    formData = { ...formData, images }
+    console.debug("form data:", formData)
+
+  } else {
+    console.debug("no upload")
+  }
+
+  console.debug("request images:", req.files);
   show.findByIdAndUpdate(id, formData, function (err, show) {
     if (err) {
       res.status(422).send(err);

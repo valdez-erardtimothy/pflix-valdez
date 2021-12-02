@@ -16,6 +16,7 @@ export default function Edit()  {
   let [releaseDay, setReleaseDay] = useState("");
   let [plot, setPlot] = useState("");
   let [showType, setShowType] = useState("Movie");
+  let [images, setImages] = useState('');
   
   useEffect(async ()=> {
     let {data} = await axios.get(`/api/admin/shows/${id}`).then();
@@ -35,6 +36,7 @@ export default function Edit()  {
     setReleaseMonth(releaseDateObject.getMonth());
     setPlot(plot);
     setShowType(showType);
+    
 
   },[]);
   let submitHandler = (e) => {
@@ -54,7 +56,7 @@ export default function Edit()  {
     );
     editShowData.set('showType', showType);
     editShowData.set('plot',plot);
-    console.debug("createmoviedata:");
+    [...images].forEach(img=>editShowData.append('images', img));
     console.debug(editShowData);
     
 
@@ -144,6 +146,19 @@ export default function Edit()  {
           <option value="Movie">Movie</option>
         </Form.Select>
       </FloatingLabel>
+      <Form.Group 
+        controlId="editShowImages"
+        className="mb-3"
+      >
+        <Form.Label>Images</Form.Label>
+        <Form.Control
+          name="images"
+          type="file"
+          accept="image/*"
+          multiple
+          onChange={e=>setImages(e.target.files)}
+        />
+      </Form.Group>
       <Button type="submit">Update</Button>
     </Form>
   </>);

@@ -3,7 +3,7 @@ import React, {useState, useEffect} from 'react';
 import {Helmet} from 'react-helmet';
 import {Container} from 'react-bootstrap';
 import {Link, useParams, useNavigate} from 'react-router-dom';
-import {Button, Table} from 'react-bootstrap';
+import {Button, Image,Table, Row, Col} from 'react-bootstrap';
 
 
 export default function Read() {
@@ -67,6 +67,19 @@ export default function Read() {
           <p>Release Date: {new Date(show.released).toDateString()}</p>
           <h4>Plot</h4>
           <p>{show.plot}</p>
+
+          <hr/>
+          <h4>Gallery</h4>
+          {show.images? (
+            <Row>
+              {show.images.map(img=> (
+                <Col sm="4" lg="3" key={img}>
+                  <Image src={img} fluid/>
+                </Col>
+              ))}
+            </Row>
+          ):""}
+          
         </Container>
       </>
     ):(
