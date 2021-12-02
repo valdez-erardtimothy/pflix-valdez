@@ -1,10 +1,15 @@
 const fs = require('fs');
 const path = require('path');
 const express = require('express');
+const fileUpload = require('express-fileupload');
 const app = express();
-
 app.use(express.json());
-
+app.use(express.urlencoded({ extended: true }));
+app.use(fileUpload({
+  createParentPath: true
+}));
+// app.use(bodyParser.urlencoded({extended:true}));
+// app.use(bodyParser.json());
 // register all routers on /routes
 
 /**
@@ -16,7 +21,7 @@ const ROUTE_PREFIX = "/api";
  * path of routes relative to this file (express-app.js)
  */
 const ROUTES_PATH = 'routes';
-
+app.use(`${ROUTE_PREFIX}/assets`, express.static(path.resolve(__dirname, 'assets')));
 /**
  * register all route files in the ROUTES_PATH folder
  * all exports on the folder must be a express.Router object
@@ -27,4 +32,5 @@ fs.readdirSync(path.resolve(__dirname, ROUTES_PATH)).forEach(filename => {
   app.use(ROUTE_PREFIX, router);
 });
 
+app.use(ROUTE_PREFIX + "/test", (req, res) => { res.send('welcome to PFlix API') })
 module.exports = app;

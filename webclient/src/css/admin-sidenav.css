@@ -1,0 +1,10 @@
+.admin-sidenav {
+    background-color:#191970;
+    }
+.admin-sidenav a.nav-link {
+    color:#E8BE02;
+}
+.admin-sidenav .nav-link:hover{
+    background-color: #1A1AE8;
+    color: #0EE860;
+}
