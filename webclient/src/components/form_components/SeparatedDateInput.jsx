@@ -1,4 +1,4 @@
-import React, {useState} from 'react';
+import React from 'react';
 import { Col, Form, Row, FloatingLabel } from 'react-bootstrap';
 
 export default function SeparatedDateInput({
@@ -28,24 +28,9 @@ export default function SeparatedDateInput({
     "December"
   ];
   // keeping a separate state for frontend validation purposes
-  const [year, setYear] = useState(yearValue);
-  const [month, setMonth] = useState(monthValue);
-  const [day, setDay] = useState(dayValue);
-
-  const yearChangeHandler = (e) => {
-    setYear(parseInt(e.target.value));
-    yearChangeFormHandler(e);
-  };
-  
-  const monthChangeHandler = (e) => {
-    setMonth(parseInt(e.target.value));
-    monthChangeFormHandler(e);
-  };
-
-  const dayChangeHandler = (e) => {
-    setDay(parseInt(e.target.value));
-    dayChangeFormHandler(e);
-  };
+  const year = yearValue;
+  const month = monthValue;
+  const day = dayValue;
 
   // day=0 wraps to the last day of previous month (hence the +1)
   const monthDays = new Date(year, month+1, 0).getDate();
@@ -60,19 +45,19 @@ export default function SeparatedDateInput({
     <Row>
       <Form.Group as={Col} md="2" xs="4">
         <FloatingLabel label="Year">
-          <Form.Control type="number" name={yearName} onChange={yearChangeHandler}/>  
+          <Form.Control type="number" value={year} name={yearName} onChange={yearChangeFormHandler}/>  
         </FloatingLabel>
       </Form.Group> 
       <Form.Group as={Col} md="3" xs="4">
         <FloatingLabel label="Month" >
-          <Form.Select name={monthName} value={month} onChange={monthChangeHandler} placeholder="Months">
+          <Form.Select name={monthName} value={month} onChange={monthChangeFormHandler} placeholder="Months">
             {monthOptions}
           </Form.Select>  
         </FloatingLabel>
       </Form.Group> 
       <Form.Group as={Col} md="2" xs="4">
         <FloatingLabel label="Day">
-          <Form.Select name={dayName} value={day} onChange={dayChangeHandler}>
+          <Form.Select name={dayName} value={day} onChange={dayChangeFormHandler}>
             {dayOptions}
           </Form.Select>
         </FloatingLabel>
