@@ -22,7 +22,7 @@ showController.read = async (req, res) => {
 showController.create = async (req, res) => {
   let { title, released, runtimeMinutes, plot, showType } = req.body;
   console.debug("body:", req.body);
-  let uploads = req.files.images;
+  let uploads = req.files?.images;
   let imgPaths = [];
   if (uploads !== undefined) {
     if (!Array.isArray(uploads)) {
@@ -47,7 +47,7 @@ showController.create = async (req, res) => {
       error: err,
       request: req.body
     });
-    res.status(200).send({ film: data });
+    res.status(200).send({ show: data });
   });
 };
 

@@ -45,7 +45,9 @@ export default function Create() {
       (response) => {
         if(response.status === 200) {
           // get back to show list 
-          navigate(-1); 
+          console.debug("response:", response);
+          let {show} = response.data;
+          navigate('/admin/shows/'+show._id);   
         }
       }
     );
