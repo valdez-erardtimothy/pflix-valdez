@@ -1,5 +1,5 @@
 import React, {useState} from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, FloatingLabel } from 'react-bootstrap';
 import SeparatedDateInput from '../../../components/form_components/SeparatedDateInput';
 import axios from 'axios';
@@ -15,6 +15,8 @@ export default function Create() {
   let [plot, setPlot] = useState("");
   let [showType, setShowType] = useState("Movie");  
   let [poster, setPoster] = useState("");
+
+  let navigate = useNavigate(); 
 
   let submitHandler = (e) => {
     e.preventDefault();
@@ -38,7 +40,14 @@ export default function Create() {
     console.debug(createShowData);
     
 
-    axios.post('/api/admin/shows', createShowData);
+    axios.post('/api/admin/shows', createShowData).then(
+      (response) => {
+        if(response.status === 200) {
+          // get back to show list 
+          navigate(-1); 
+        }
+      }
+    );
   };
 
   return(<>
