@@ -3,6 +3,8 @@ import ReactDOM from 'react-dom';
 import 'bootstrap/dist/css/bootstrap.min.css';
 import {BrowserRouter, Routes, Route} from 'react-router-dom';
 import { HelmetProvider } from 'react-helmet-async';
+import { Provider } from 'react-redux';
+import reduxStore from './store.js';
 import Home from './pages/Home.jsx';
 import MainLayout from './layouts/Main.jsx';
 import AdminLayout from './layouts/Admin.jsx';
@@ -31,13 +33,15 @@ const routes = <>
 
 ReactDOM.render(
   <React.StrictMode>
-    <BrowserRouter>
-      <HelmetProvider>
-        <Routes>
-          {routes}
-        </Routes>
-      </HelmetProvider>
-    </BrowserRouter>
+    <Provider store={reduxStore}>
+      <BrowserRouter>
+        <HelmetProvider>
+          <Routes>
+            {routes}
+          </Routes>
+        </HelmetProvider>
+      </BrowserRouter>
+    </Provider>
   </React.StrictMode>,
   document.getElementById('root')
 );

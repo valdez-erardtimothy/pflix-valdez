@@ -1,19 +1,42 @@
 import axios from 'axios';
-import React, {useState, useEffect } from 'react';
+import React, { useEffect } from 'react';
 import {Link, useNavigate} from 'react-router-dom';
 import {Button,Table} from 'react-bootstrap';
 import {Helmet} from 'react-helmet-async';
-
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchShowsAdmin } from '../../../features/admin/showsSlice';
+import LoadingComponent from '../../../components/Loading.jsx';
+import { startLoad,endLoad } from '../../../features/loadingSlice';
 export default function List() {
-  let [shows, setShows] = useState([]);
   let navigate = useNavigate();
+  let {
+    showsAdmin:shows,
+    showsAdminErrors,
+    showsAdminStatus
+  } = useSelector(state=>state.admin.shows);
+  const dispatch = useDispatch();
+  const loading = useSelector(state => state.loading.status);
   // 
   useEffect(async() => {
-    let response = await axios.get('/api/admin/shows/');
-    let {shows} = await response.data;
-    setShows(shows);
+    dispatch(fetchShowsAdmin());
   }, []);
 
+  useEffect(async()=> {
+    
+    switch (showsAdminStatus) {
+    case 'idle':
+    case 'loading':
+      dispatch(startLoad());
+      break;
+    case 'success':
+    case 'failed':
+      dispatch(endLoad());  
+      break;
+    default:
+      break;
+    }
+  }, [showsAdminStatus]);
+  endLoad;
   let deleteShow = (show) => {
     axios.delete(`/api/admin/shows/${show._id}`).then(response=>{
       if(response.status===200) {
@@ -22,75 +45,84 @@ export default function List() {
       }
     });
   };
-
-  return(
-    <>
-      <Helmet>
-        <title>Shows</title>
-      </Helmet>
-      <main className="container-fluid">
-        <h1>Shows
-          <Link 
-            to="/admin/shows/create" 
-            className="material-icons text-decoration-none">
+  return (
+    loading?<LoadingComponent/>:(
+      <>
+        <Helmet>
+          <title>Shows</title>
+        </Helmet>
+        <main className="container-fluid">
+          <h1>Shows
+            <Link 
+              to="/admin/shows/create" 
+              className="material-icons text-decoration-none">
             add
-          </Link>
-        </h1>
-        {shows.length>0? (<>
-          <p>List of Shows</p>
-          <Table striped bordered >
-            <thead>
-              <tr>
-                <th>Title</th>
-                <th>Release Date</th>
-                <th>Runtime</th>
-                <th>Actions</th>
-              </tr>
-            </thead>
-            <tbody>
-              {shows.map(
-                show=>{
-                  let hours = Math.floor(show.runtimeMinutes/60);
-                  let minutes = Math.floor(show.runtimeMinutes%60);
-                  return (
-                    <tr key={show._id}>
-                      <td>
-                        <Link to={`/admin/shows/${show._id}`}>
-                          {show.title}
-                        </Link>
-                      </td>
-                      <td>{new Date(show.released).toDateString()}</td>
-                      <td>{hours>0?`${hours} hour/s `:""}{minutes} Minutes</td>
-                      <td>
-                        <Button 
-                          as={Link} 
-                          to={`/admin/shows/${show._id}/edit`}
-                          className="material-icons"
-                          size="sm"
-                          variant="secondary"
-                        >
+            </Link>
+          </h1>
+          {shows.length>0? (<>
+            <p>List of Shows</p>
+            <Table striped bordered >
+              <thead>
+                <tr>
+                  <th>Title</th>
+                  <th>Release Date</th>
+                  <th>Runtime</th>
+                  <th>Actions</th>
+                </tr>
+              </thead>
+              <tbody>
+                {shows.map(
+                  show=>{
+                    let hours = Math.floor(show.runtimeMinutes/60);
+                    let minutes = Math.floor(show.runtimeMinutes%60);
+                    return (
+                      <tr key={show._id}>
+                        <td>
+                          <Link to={`/admin/shows/${show._id}`}>
+                            {show.title}
+                          </Link>
+                        </td>
+                        <td>{new Date(show.released).toDateString()}</td>
+                        <td>{hours>0?`${hours} hour/s `:""}{minutes} Minutes</td>
+                        <td>
+                          <Button 
+                            as={Link} 
+                            to={`/admin/shows/${show._id}/edit`}
+                            className="material-icons"
+                            size="sm"
+                            variant="secondary"
+                          >
                         edit
-                        </Button>
-                        <Button 
-                          className="material-icons"
-                          size="sm"
-                          variant="danger"
-                          onClick={()=>deleteShow(show)}>
+                          </Button>
+                          <Button 
+                            className="material-icons"
+                            size="sm"
+                            variant="danger"
+                            onClick={()=>deleteShow(show)}>
                             delete
-                        </Button>
-                      </td>
-                    </tr>
-                  );
-                }
-              )}
-            </tbody>
-          </Table>
-        </>) : (
-          <div >
-            <p>No shows added yet</p>
-          </div>
-        )} 
-      </main>
-    </>
+                          </Button>
+                        </td>
+                      </tr>
+                    );
+                  }
+                )}
+              </tbody>
+            </Table>
+          </>) : (
+            <div >
+              <p>No shows added yet</p>
+            </div>
+          )} 
+          {showsAdminStatus === "failed" && (
+            <>
+              <h6>Error!</h6>
+              <p>{showsAdminErrors}</p>
+            </>
+          )}
+        </main>
+      </>
+    )
   );
+
+
 }
