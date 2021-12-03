@@ -1,11 +1,13 @@
 import {configureStore} from '@reduxjs/toolkit';
 import {combineReducers} from 'redux';
 import adminShowsReducer from './features/admin/showsSlice';
+import adminshowReducer from './features/admin/showSlice';
 import loadingReducer from './features/loadingSlice';
 let reducers = combineReducers({
   loading:loadingReducer,
   admin: combineReducers({
-    shows:adminShowsReducer
+    shows:adminShowsReducer,
+    show: adminshowReducer
   })
 });
 
