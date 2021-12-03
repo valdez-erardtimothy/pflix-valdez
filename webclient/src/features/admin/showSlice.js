@@ -8,17 +8,29 @@ export const fetchShowAdmin = createAsyncThunk(
   }
 );
 
+export const deleteShow = createAsyncThunk(
+  'admin.show/delete', async(id) => {
+    let response = await axios.delete(`/api/admin/shows/${id}`);
+    return response;
+  }
+);
 
 const showSlice = createSlice({
   name: "admin/show",
   initialState: {
     loadedShowAdmin: {},
     showAdminLoadStatus: 'idle', // loading, successful, failed
-    showAdminError: ''
+    showAdminError: '',
+    deleteShowStatus: 'idle',
+    deleteResponse: {},
+    deleteShowError: ''
   },
   reducers: {
     clearLoadedShowAdmin: (state)=>{
       state.loadedShowAdmin={};
+    },
+    clearDeleteShowStatus:(state) => {
+      state.deleteShowStatus="idle";
     }
   },
   extraReducers: builder=>{
@@ -33,10 +45,21 @@ const showSlice = createSlice({
       .addCase(fetchShowAdmin.rejected, (state, action) => {
         state.showAdminError = action.payload;
         state.showAdminLoadStatus = 'failed';
+      })
+      .addCase(deleteShow.pending, (state)=>{
+        state.deleteShowStatus = 'loading';
+      })
+      .addCase(deleteShow.fulfilled, (state,action) =>{
+        state.deleteShowStatus = 'success';
+        state.deleteResponse = action.payload;
+      })
+      .addCase(deleteShow.rejected, (state, action) => {
+        state.deleteShowError = action.payload;
+        state.deleteShowStatus = 'failed';
       });
   }
 });
 
-export const {clearLoadedShowAdmin} = showSlice.actions;
+export const {clearLoadedShowAdmin ,clearDeleteShowStatus} = showSlice.actions;
 
 export default showSlice.reducer;

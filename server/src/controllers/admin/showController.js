@@ -54,11 +54,11 @@ showController.create = async (req, res) => {
 showController.destroy = async (req, res) => {
   let { id } = req.params;
   console.debug('show destroy route');
-  show.deleteOne({ _id: id }, function (err, data) {
+  show.findOneAndDelete({ _id: id }, function (err, data) {
     if (err) {
       res.status(400).send("error in deleting show!", err);
     }
-    res.status(200).send(data);
+    res.status(200).send({ show: data });
   });
 };
 

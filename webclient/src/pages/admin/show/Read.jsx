@@ -1,4 +1,3 @@
-import axios from 'axios';
 import React, { useEffect} from 'react';
 import {Helmet} from 'react-helmet-async';
 import {Container} from 'react-bootstrap';
@@ -6,8 +5,10 @@ import {Link, useParams, useNavigate} from 'react-router-dom';
 import {Button, Image,Table, Row, Col} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { startLoad, endLoad } from '../../../features/loadingSlice';
-import { fetchShowAdmin } from '../../../features/admin/showSlice';
+import { fetchShowAdmin, deleteShow } from '../../../features/admin/showSlice';
+import { clearLoadedShowAdmin, clearDeleteShowStatus } from '../../../features/admin/showSlice';
 import LoadingComponent from '../../../components/Loading.jsx';
+
 export default function Read() {
   let {id}= useParams();
   
@@ -18,15 +19,21 @@ export default function Read() {
   const {
     loadedShowAdmin:show,
     showAdminLoadStatus,
-    showAdminError
+    showAdminError,
+    deleteShowStatus,
   } = useSelector(state=>state.admin.show);
+  // load show on page visit
   useEffect(async()=> {
+    dispatch(clearDeleteShowStatus);
     dispatch(fetchShowAdmin(id));
   },[]);
+  // handle load status changes
   useEffect(async()=> {
     
     switch (showAdminLoadStatus) {
     case 'idle':
+      dispatch(endLoad());
+      break;
     case 'loading':
       dispatch(startLoad());
       break;
@@ -38,6 +45,31 @@ export default function Read() {
       break;
     }
   }, [showAdminLoadStatus]);
+  
+  // handle delete 
+  useEffect(async()=> {
+    
+    switch (deleteShowStatus) {
+    case 'loading':
+      dispatch(startLoad());
+      break;
+    case 'success':
+      dispatch(endLoad());  
+      dispatch(clearLoadedShowAdmin());
+      navigate('/admin/shows');
+      break;
+    case 'idle':
+    case 'failed':
+      dispatch(endLoad());  
+      break;
+    default:
+      break;
+    }
+  }, [deleteShowStatus]);
+
+  const deleteShowHandler = ()=> {
+    dispatch(deleteShow(id));
+  }; 
   return (
     loading ?(
       <LoadingComponent/>
@@ -60,14 +92,7 @@ export default function Read() {
                 <Button 
                   size="sm"
                   variant="danger"
-                  onClick={()=>{
-                    axios.delete(`/api/admin/shows/${id}`)
-                      .then(response=> {
-                        if(response.status === 200) { 
-                          navigate("/admin/shows");
-                        }
-                      });
-                  }}
+                  onClick={deleteShowHandler}
                 >
                 delete
                 </Button>
@@ -76,7 +101,6 @@ export default function Read() {
             <h6>{show.showType}</h6>
             <Table size="sm" borderless>
               <tbody>
-
                 <tr>
                   <th>Last Updated:</th>
                   <td>{new Date(show.updatedAt).toLocaleString()}</td>
