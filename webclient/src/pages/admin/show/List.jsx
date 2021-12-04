@@ -1,29 +1,69 @@
-import axios from 'axios';
-import React, {useState, useEffect } from 'react';
-import {Link, useNavigate} from 'react-router-dom';
+import React, { useEffect } from 'react';
+import {Link} from 'react-router-dom';
 import {Button,Table} from 'react-bootstrap';
 import {Helmet} from 'react-helmet-async';
+import { useDispatch, useSelector } from 'react-redux';
+import { fetchShowsAdmin, removeFromList } from '../../../features/admin/showsSlice';
 
+import { startLoad,endLoad } from '../../../features/loadingSlice';
+import { clearDeleteShowStatus, deleteShow } from '../../../features/admin/showSlice';
 export default function List() {
-  let [shows, setShows] = useState([]);
-  let navigate = useNavigate();
-  // 
+  let {
+    showsAdmin:shows,
+    showsAdminErrors,
+    showsAdminStatus
+  } = useSelector(state=>state.admin.shows);
+  const {
+    deleteShowStatus = "idle",
+    deleteResponse,
+  } = useSelector(state=>state.admin.show);
+  const dispatch = useDispatch();
+  // load shows on page visit
   useEffect(async() => {
-    let response = await axios.get('/api/admin/shows/');
-    let {shows} = await response.data;
-    setShows(shows);
+    dispatch(fetchShowsAdmin());
   }, []);
 
-  let deleteShow = (show) => {
-    axios.delete(`/api/admin/shows/${show._id}`).then(response=>{
-      if(response.status===200) {
-        console.debug('deleting success! deleted data:', show  );
-        navigate(0, {replace:true});
-      }
-    });
-  };
+  useEffect(async()=> {
+    
+    switch (showsAdminStatus) {
+    case 'idle':
+    case 'loading':
+      dispatch(startLoad());
+      break;
+    case 'success':
+    case 'failed':
+      dispatch(endLoad());  
+      break;
+    default:
+      break;
+    }
+  }, [showsAdminStatus]);
 
-  return(
+  let deleteShowCallback = (show) => {
+    dispatch(deleteShow(show._id));
+  };
+  
+  // handle delete 
+  useEffect(async()=> {
+    
+    switch (deleteShowStatus) {
+    case 'loading':
+      dispatch(startLoad());
+      break;
+    case 'success':
+      dispatch(endLoad()); 
+      dispatch(removeFromList(deleteResponse.data.show));
+      dispatch(clearDeleteShowStatus());
+      break;
+    case 'idle':
+    case 'failed':
+      dispatch(endLoad());  
+      break;
+    default:
+      break;
+    }
+  }, [deleteShowStatus]);
+  return (
     <>
       <Helmet>
         <title>Shows</title>
@@ -75,7 +115,7 @@ export default function List() {
                           className="material-icons"
                           size="sm"
                           variant="danger"
-                          onClick={()=>deleteShow(show)}>
+                          onClick={()=>deleteShowCallback(show)}>
                             delete
                         </Button>
                       </td>
@@ -90,7 +130,16 @@ export default function List() {
             <p>No shows added yet</p>
           </div>
         )} 
+        {showsAdminStatus === "failed" && (
+          <>
+            <h6>Error!</h6>
+            <p>{showsAdminErrors}</p>
+          </>
+        )}
       </main>
     </>
+    
   );
+
+
 }

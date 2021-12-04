@@ -27,13 +27,13 @@ export default function SeparatedDateInput({
     "November",
     "December"
   ];
-  // keeping a separate state for frontend validation purposes
   const year = yearValue;
   const month = monthValue;
   const day = dayValue;
 
   // day=0 wraps to the last day of previous month (hence the +1)
-  const monthDays = new Date(year, month+1, 0).getDate();
+  // 0 as default year to prevent errors
+  const monthDays = new Date(year||0, month+1, 0).getDate();
   const dayOptions = ([...Array(monthDays).keys()])
     .map(day=><option key={day} value={day+1}>{day+1}</option>);
   let monthOptions = months.map(

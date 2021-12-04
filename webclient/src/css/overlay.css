@@ -1,0 +1,5 @@
+.page-overlay {
+    min-height: 100vh;
+    z-index:1;
+    background-color: white;
+}
