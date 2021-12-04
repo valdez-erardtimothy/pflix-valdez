@@ -1,11 +1,22 @@
 import React, {useState, useEffect} from 'react';
 import {Link, useParams, useNavigate} from 'react-router-dom';
-import axios from 'axios';
+
 import {Helmet} from 'react-helmet-async';
 import {Button, Form, FloatingLabel} from 'react-bootstrap';
 import SeparatedDateInput from '../../../components/form_components/SeparatedDateInput';
+import { useSelector, useDispatch } from 'react-redux';
+import { fetchShowAdmin, editShow, clearEditShowStatus} from '../../../features/admin/showSlice';
+import { startLoad, endLoad } from '../../../features/loadingSlice';
+
 export default function Edit()  {
   let navigate =  useNavigate();
+  let {
+    loadedShowAdmin:show,
+    showAdminLoadStatus,
+    editShowStatus,
+    editShowResponse
+  } = useSelector(state=>state.admin.show);
+  const dispatch = useDispatch();
   // temporarily disable eslint while form not submittable
   /* eslint-disable no-unused-vars */
   let {id} = useParams();
@@ -17,64 +28,87 @@ export default function Edit()  {
   let [plot, setPlot] = useState("");
   let [showType, setShowType] = useState("Movie");
   let [images, setImages] = useState('');
-  
+  // on first page visit
   useEffect(async ()=> {
-    let {data} = await axios.get(`/api/admin/shows/${id}`).then();
-    let {
-      title,
-      runtimeMinutes,
-      released,
-      plot,
-      showType
-    } = data.show;
-    let releaseDateObject = new Date(released);
-    console.debug(releaseDateObject);
-    setTitle(title);
-    setRuntimeMinutes(runtimeMinutes);
-    setReleaseYear(releaseDateObject.getFullYear());
-    setReleaseDay(releaseDateObject.getDay());
-    setReleaseMonth(releaseDateObject.getMonth());
-    setPlot(plot);
-    setShowType(showType);
-    
-
+    dispatch(fetchShowAdmin(id));
   },[]);
+
+  let releaseDateObject;
+  // handle load status changes
+  useEffect(async()=> {
+    
+    switch (showAdminLoadStatus) {
+    case 'idle':
+      dispatch(endLoad());
+      break;
+    case 'loading':
+      dispatch(startLoad());
+      break;
+    case 'success':
+      releaseDateObject = new Date(show.released);
+      console.debug(releaseDateObject);
+      setTitle(show.title);
+      setRuntimeMinutes(show.runtimeMinutes);
+      setReleaseYear(releaseDateObject.getFullYear());
+      setReleaseDay(releaseDateObject.getDay());
+      setReleaseMonth(releaseDateObject.getMonth());
+      setPlot(show.plot);
+      setShowType(show.showType);
+      dispatch(endLoad());  
+      break;
+    case 'failed':
+      dispatch(endLoad());  
+      break;
+    default:
+      break;
+    }
+  }, [showAdminLoadStatus]);
+
+  // handle edit status changes
+  useEffect(()=> {
+    switch(editShowStatus) {
+    case 'idle':
+      dispatch(endLoad());
+      break;
+    case 'loading':
+      dispatch(startLoad());
+      break;
+    case 'success':
+      if(editShowResponse.status === 200) {
+        dispatch(clearEditShowStatus()); 
+        navigate( -1 );
+      }
+      break;
+    case 'failed':
+      dispatch(endLoad());
+    }
+  },[editShowStatus]);
+
   let submitHandler = (e) => {
     e.preventDefault();
     console.debug(e.target);
-    
-    let editShowData = new FormData();
-    editShowData.set('title', title);
-    editShowData.set('runtimeMinutes',runtimeMinutes);
-    editShowData.set(
-      "released",
-      new Date(
+    let formData = new FormData();
+    formData.set('title', title);
+    formData.set('runtimeMinutes',runtimeMinutes);
+    formData.set(
+      "released",new Date(
         releaseYear,
         releaseMonth,
         releaseDay
-      )
+      ),
     );
-    editShowData.set('showType', showType);
-    editShowData.set('plot',plot);
-    [...images].forEach(img=>editShowData.append('images', img));
-    
-
-    axios.patch(`/api/admin/shows/${id}`, editShowData).then(
-      (response) => {
-        if(response.status === 200) {
-          // get back to show list 
-          navigate(-1); 
-        }
-      }
-    
-    );
+    formData.set('showType', showType);
+    formData.set('plot',plot);
+    [...images].forEach(img=>formData.append('images', img));
+    console.debug('pre-submit formdata:', formData);
+    dispatch(editShow({id:id, editShowData:formData}));
   };
 
   return(<>
     <Helmet>
-      <title>Edit {title}</title>
+      <title>Edit {show?.title || "Film"}</title>
     </Helmet>
-    <h3>Edit {title}</h3>
+    <h3>Edit {show.title}</h3>
     <h6><Link to="/admin/shows">Back to list</Link></h6>
     <Form onSubmit={submitHandler}>
       <FloatingLabel 

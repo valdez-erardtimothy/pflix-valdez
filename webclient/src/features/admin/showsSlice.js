@@ -19,11 +19,15 @@ export const fetchShowsAdmin = createAsyncThunk(
 const showsAdminSlice = createSlice({
   name:"admin.shows",
   initialState: {
-    showsAdmin: {},
+    showsAdmin: [],
     showsAdminErrors: {},
     showsAdminStatus: 'idle' //... loading, success, failed
   },
   reducers: {
+    removeFromList: (state, action) => {
+      let showToDelete = action.payload;
+      state.showsAdmin = state.showsAdmin.filter(show => show._id !== showToDelete._id);
+    }
   }, 
   extraReducers: builder=>{
     builder
@@ -46,6 +50,6 @@ const showsAdminSlice = createSlice({
 
 
 
-export const { loadAll } = showsAdminSlice.actions;
+export const { removeFromList } = showsAdminSlice.actions;
 
 export default showsAdminSlice.reducer;
