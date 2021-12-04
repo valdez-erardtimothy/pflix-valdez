@@ -1,12 +1,13 @@
-import React, {useState} from 'react';
+import React, {useState, useEffect} from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button, Form, FloatingLabel } from 'react-bootstrap';
 import SeparatedDateInput from '../../../components/form_components/SeparatedDateInput';
-import axios from 'axios';
+import { useSelector, useDispatch } from 'react-redux';
 import {Helmet} from 'react-helmet-async';
+import {startLoad, endLoad} from '../../../features/loadingSlice';
+import {createShow, clearCreateShowStatus} from '../../../features/admin/showSlice';
 export default function Create() {
   // temporarily disable eslint while form not submittable
-  /* eslint-disable no-unused-vars */
   let [title, setTitle] = useState("");
   let [runtimeMinutes, setRuntimeMinutes] = useState("");
   let [releaseYear, setReleaseYear] =  useState("");
@@ -14,11 +15,14 @@ export default function Create() {
   let [releaseDay, setReleaseDay] = useState("");
   let [plot, setPlot] = useState("");
   let [showType, setShowType] = useState("Movie");  
-  let [poster, setPoster] = useState("");
   let [images, setImages] = useState('');
 
   let navigate = useNavigate(); 
-
+  const {
+    createShowStatus,
+    createShowResponse
+  } = useSelector(state=>state.admin.show);
+  const dispatch = useDispatch();
   let submitHandler = (e) => {
     e.preventDefault();
     console.debug(e.target);
@@ -36,23 +40,31 @@ export default function Create() {
     );
     createShowData.set('showType', showType);
     createShowData.set('plot',plot);
-    createShowData.set('poster', poster);
     [...images].forEach(img=>createShowData.append('images', img));
 
     
-
-    axios.post('/api/admin/shows', createShowData).then(
-      (response) => {
-        if(response.status === 200) {
-          // get back to show list 
-          console.debug("response:", response);
-          let {show} = response.data;
-          navigate('/admin/shows/'+show._id);   
-        }
-      }
-    );
+    dispatch(createShow(createShowData));
   };
 
+  // handle create status changes
+  useEffect(()=> {
+    switch(createShowStatus) {
+    case 'idle':
+      dispatch(endLoad());
+      break;
+    case 'loading':
+      dispatch(startLoad());
+      break;
+    case 'success':
+      if(createShowResponse.status === 200) {
+        dispatch(clearCreateShowStatus()); 
+        navigate( "/admin/shows/"+createShowResponse.data.show._id );
+      }
+      break;
+    case 'failed':
+      dispatch(endLoad());
+    }
+  },[createShowStatus]);
   return(<>
     <Helmet>
       <title>Add a Show</title>

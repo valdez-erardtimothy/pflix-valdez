@@ -19,13 +19,25 @@ export const deleteShow = createAsyncThunk(
   }
 );
 
+export const createShow = createAsyncThunk(
+  'admin.show/create', async(createShowData) => {
+    
+
+    let response = await axios.post(`/api/admin/shows/`, createShowData);
+    
+    return {
+      status:response.status,
+      data:response.data
+    };
+  }
+);
+
 export const editShow = createAsyncThunk(
   'admin.show/edit', async({id, editShowData}) => {
-    console.debug('edit data:', editShowData);
     
 
     let response = await axios.patch(`/api/admin/shows/${id}`, editShowData);
-    console.debug("post-submit reponse:", response);
+
     return {
       status:response.status,
       data:response.data
@@ -44,7 +56,10 @@ const showSlice = createSlice({
     deleteShowError: '',
     editShowStatus: "idle",
     editShowResponse: {},
-    editShowError: ''
+    editShowError: '',
+    createShowStatus:'idle',
+    createShowResponse: {},
+    createShowError: ''
   },
   reducers: {
     clearLoadedShowAdmin: (state)=>{
@@ -56,6 +71,10 @@ const showSlice = createSlice({
       state.deleteResponse = {};
     },
     clearEditShowStatus:(state)=> {
+      state.editShowStatus = "idle";
+      state.editShowResponse = {};
+    },
+    clearCreateShowStatus:(state)=> {
       state.editShowStatus = "idle";
       state.editShowResponse = {};
     }
@@ -94,6 +113,17 @@ const showSlice = createSlice({
       .addCase(editShow.rejected, (state, action) => {
         state.editShowError = action.payload;
         state.editShowStatus = 'failed';
+      })
+      .addCase(createShow.pending, (state)=>{
+        state.createShowStatus = 'loading';
+      })
+      .addCase(createShow.fulfilled, (state,action) =>{
+        state.createShowStatus = 'success';
+        state.createShowResponse = action.payload;
+      })
+      .addCase(createShow.rejected, (state, action) => {
+        state.createShowError = action.payload;
+        state.createShowStatus = 'failed';
       });
   }
 });
@@ -101,7 +131,8 @@ const showSlice = createSlice({
 export const {
   clearLoadedShowAdmin,
   clearDeleteShowStatus, 
-  clearEditShowStatus
+  clearEditShowStatus,
+  clearCreateShowStatus
 } = showSlice.actions;
 
 export default showSlice.reducer;
