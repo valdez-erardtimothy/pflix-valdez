@@ -9,7 +9,8 @@ import Home from './pages/Home.jsx';
 import MainLayout from './layouts/Main.jsx';
 import AdminLayout from './layouts/Admin.jsx';
 import reportWebVitals from './reportWebVitals';
-
+import {Provider as AlertProvider} from 'react-alert';
+import AlertConfig from './config/react-alert';
 import ShowList from './pages/admin/show/List.jsx';
 import CreateShow from './pages/admin/show/Create.jsx';
 import ReadShow from './pages/admin/show/Read.jsx';
@@ -34,13 +35,15 @@ const routes = <>
 ReactDOM.render(
   <React.StrictMode>
     <Provider store={reduxStore}>
-      <BrowserRouter>
-        <HelmetProvider>
-          <Routes>
-            {routes}
-          </Routes>
-        </HelmetProvider>
-      </BrowserRouter>
+      <AlertProvider {...AlertConfig}>
+        <BrowserRouter>
+          <HelmetProvider>
+            <Routes>
+              {routes}
+            </Routes>
+          </HelmetProvider>
+        </BrowserRouter>
+      </AlertProvider>
     </Provider>
   </React.StrictMode>,
   document.getElementById('root')
