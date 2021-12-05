@@ -1,15 +1,33 @@
 import React from 'react';
-import { Navbar, Nav } from 'react-bootstrap';
+import {Button, Container, Navbar, Nav, NavDropdown } from 'react-bootstrap';
 import {Link} from 'react-router-dom';
+import {useDispatch, useSelector} from 'react-redux';
+import {logout} from '../features/authSlice';
 
 export default function MainNavbar() {
-  return <Navbar expand="md" >
-    <Navbar.Brand as={Link} to="/">PFlix</Navbar.Brand>
-    <Navbar.Toggle aria-controls="basic-navbar-nav" />
-    <Nav>
-      <Navbar.Collapse>
+  let { authenticated,
+    authenticatedUser 
+  } = useSelector(state=>state.auth);
+  const dispatch = useDispatch();
+  return <Navbar>
+    <Container fluid>
+      <Navbar.Brand as={Link} to="/">PFlix</Navbar.Brand>
+      <Nav  className="">
         <Nav.Link as={Link} to="/shows">Shows</Nav.Link>
-      </Navbar.Collapse>
-    </Nav>
+
+        {authenticated?(
+          <NavDropdown title={authenticatedUser.name}>
+            <NavDropdown.Item as={Button} onClick={()=>{dispatch(logout());}}>
+              Log out
+            </NavDropdown.Item>
+          </NavDropdown>
+        ):(
+          <Nav.Link as={Link} to="/login">
+            Log in
+          </Nav.Link>
+        )}
+      </Nav>
+    </Container>
+    
   </Navbar>;
 }

@@ -2,14 +2,18 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const fileUpload = require('express-fileupload');
+const cookieParser = require('cookie-parser')
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload({
   createParentPath: true
 }));
-// app.use(bodyParser.urlencoded({extended:true}));
-// app.use(bodyParser.json());
+app.use(cookieParser());
+// load passportjs strategies
+require('./passport-strategies/localStrategy');
+require('./passport-strategies/jwtStrategy');
+
 // register all routers on /routes
 
 /**
