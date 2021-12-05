@@ -2,6 +2,11 @@ const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+const createPasswordHash = (val) => {
+  if (val && typeof val !== 'string') val = '';
+  return bcrypt.hashSync(val);
+}
+
 const userSchema = Schema({
   name: {
     type: String,
@@ -22,12 +27,13 @@ const userSchema = Schema({
   password: {
     type: String,
     required: false,
-    set: value => bcrypt.hashSync(value)
+    set: createPasswordHash
   },
   isAdmin: {
     type: String,
     required: false,
-    default: false
+    default: false,
+    immutable: true
   }
 })
 
