@@ -8,7 +8,7 @@ const handleLoginMiddleware = require('../middleware/handlePasswordLogin');
 const jwtTokenName = process.env.JWT_COOKIE_NAME;
 
 router.post('/login',
-  handleLoginMiddleware,
+  handleLoginMiddleware(),
   function (req, res) {
     // login success, correct credentials
     let { user } = res?.locals;
@@ -34,7 +34,7 @@ router.post('/login',
 // load jwt-authenticated user
 router.get(
   '/getAuthenticatedUser',
-  requireAuthMiddleware,
+  requireAuthMiddleware(),
   function (req, res) {
     let { user } = res?.locals;
     if (user) {
@@ -46,7 +46,7 @@ router.get(
 
 router.get(
   '/logout',
-  requireAuthMiddleware,
+  requireAuthMiddleware(),
   function (req, res) {
     // clear the cookie to essentially logout
     // nothing to do with the jwt but to wait for expiry

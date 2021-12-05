@@ -3,6 +3,8 @@ const passport = require('passport');
 
 const middleware = function (req, res, next) {
   passport.authenticate('local', function (err, user, info) {
+    console.debug('handlepasswordlogin authenticate:');
+    console.debug(err, user, info)
     if (err) {
       return next(err); //let express handle errors
     }
@@ -20,4 +22,4 @@ const middleware = function (req, res, next) {
   })(req, res, next);
 }
 
-module.exports = middleware;
+module.exports = () => middleware;
