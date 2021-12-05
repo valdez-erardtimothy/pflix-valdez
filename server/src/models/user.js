@@ -27,7 +27,8 @@ const userSchema = Schema({
   password: {
     type: String,
     required: false,
-    set: createPasswordHash
+    set: createPasswordHash,
+    select: false,
   },
   isAdmin: {
     type: String,
