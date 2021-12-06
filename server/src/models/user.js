@@ -28,7 +28,6 @@ const userSchema = Schema({
     type: String,
     required: false,
     set: createPasswordHash,
-    select: false,
   },
   isAdmin: {
     type: String,
@@ -43,5 +42,13 @@ userSchema.methods.generateJWT = function () {
   return jwt.sign({ id: this._id }, process.env.JWT_SECRETORKEY, {
     expiresIn: process.env.JWT_EXPIRES_IN
   });
+}
+// pop some fields on transform to json (sending to frontend)
+userSchema.options.toJSON = {
+  transform: function (doc, ret, options) {
+    delete ret.password;
+    delete ret.__v;
+    return ret;
+  }
 }
 module.exports = model('User', userSchema);
