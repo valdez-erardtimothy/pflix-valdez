@@ -32,6 +32,7 @@ const authSlice = createSlice({
   initialState:{
     authenticatedUser: {},
     authenticated:false,
+    isAdmin:false,
     loginAttemptStatus: "idle", //,loading,success,failed,
     loginAttemptError: "",
     loadStatus: '',
@@ -43,10 +44,6 @@ const authSlice = createSlice({
     clearLoginAttemptStatus: (state)=>{
       state.loginAttemptStatus="idle";
       state.loginAttemptError="";
-    },
-    clearLoadAttemptStatus: (state)=> { 
-      state.loadStatus = "idle";
-      state.loadError = "";
     },
     clearLogoutAttemptStatus:(state)=> {
       state.logoutStatus="idle",
@@ -61,6 +58,7 @@ const authSlice = createSlice({
       .addCase(login.fulfilled, (state,action) => { 
         state.loginAttemptStatus = "success";
         state.authenticated=true;
+        state.isAdmin=action.payload.user.isAdmin || false;
         state.authenticatedUser = action.payload.user;
       })
       .addCase(login.rejected, (state,action) => { 
@@ -73,6 +71,7 @@ const authSlice = createSlice({
       .addCase(loadUser.fulfilled, (state,action) => { 
         state.loadStatus = "success";
         state.authenticated=true;
+        state.isAdmin=action.payload.user.isAdmin;
         state.authenticatedUser = action.payload.user;
       })
       .addCase(loadUser.rejected, (state,action) => { 
@@ -85,6 +84,7 @@ const authSlice = createSlice({
       .addCase(logout.fulfilled, (state) => { 
         state.logoutStatus = "success";
         state.authenticated=false;
+        state.isAdmin = false;
         state.authenticatedUser = {};
       })
       .addCase(logout.rejected, (state,action) => { 
