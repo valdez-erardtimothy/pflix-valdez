@@ -12,7 +12,7 @@ user.create({
   username: 'admin',
   email: 'admin@example.com',
   password: "password",
-  isAdmin: false,
+  isAdmin: true,
 }, function (err, user) {
   if (err) {
     console.error(err);
