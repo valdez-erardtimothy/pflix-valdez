@@ -31,7 +31,7 @@ const userSchema = Schema({
     set: createPasswordHash,
   },
   isAdmin: {
-    type: String,
+    type: Boolean,
     required: false,
     default: false,
     immutable: true

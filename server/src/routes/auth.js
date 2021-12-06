@@ -73,7 +73,7 @@ router.get('/auth/google/callback',
       res.cookie(jwtTokenName, jwtoken, {
         maxAge: JWT_TOKENCOOKIE_DURATION
       })
-      return res.redirect(process.env.FRONTEND_URL)
+      return res.redirect(process.env.FRONTEND_URL + "/loginsuccess")
     }
   }
 );

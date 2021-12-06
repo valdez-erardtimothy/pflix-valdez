@@ -2,7 +2,7 @@ const passport = require('passport');
 
 const middleware = function (req, res, next) {
   passport.authenticate('google',
-    { scope: ['profile', 'email'], session: false },
+    { session: false, failureRedirect: process.env.FRONTEND_URL },
     function (err, user, info) {
       console.debug('goog auth', err, user, info)
       if (err) {

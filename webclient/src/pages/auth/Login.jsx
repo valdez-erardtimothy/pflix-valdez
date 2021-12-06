@@ -2,10 +2,10 @@ import React, {useState, useEffect} from 'react';
 import {Button, Container, FloatingLabel,Form} from 'react-bootstrap';
 import { useNavigate} from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
-import { login, clearLoginAttemptStatus } from '../features/authSlice';
-import {startLoad, endLoad} from '../features/loadingSlice';
+import { login, clearLoginAttemptStatus } from '../../features/authSlice';
+import {startLoad, endLoad} from '../../features/loadingSlice';
 import {useAlert} from 'react-alert';
-import '../css/google-signon.css';
+import '../../css/google-signon.css';
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -102,7 +102,9 @@ export default function Login() {
             
             
           </Form>
+
           <div className="text-center">
+            {/* https://medium.com/dailyjs/mern-stack-implementing-sign-in-with-google-made-easy-9bfdfe00d21c */}
             <form action="http://localhost:5000/api/auth/google">
               <button className="google-button">
                 <span className="google-button__icon">
