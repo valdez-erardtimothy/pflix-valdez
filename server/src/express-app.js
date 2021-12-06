@@ -10,11 +10,13 @@ app.use(fileUpload({
   createParentPath: true
 }));
 app.use(cookieParser());
-// load passportjs strategies
-require('./passport-strategies/localStrategy');
-require('./passport-strategies/jwtStrategy');
 
-// register all routers on /routes
+// load strategies
+fs.readdirSync(path.resolve(__dirname, "passport-strategies")).forEach(filename => {
+  require(`./passport-strategies/${filename}`);
+});
+
+/* register all routers on /routes */
 
 /**
  * prefix for all the routes on backend

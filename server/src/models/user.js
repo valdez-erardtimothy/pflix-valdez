@@ -1,6 +1,7 @@
 const { Schema, model } = require('mongoose');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
+const findOrCreate = require('mongoose-findorcreate');
 
 const createPasswordHash = (val) => {
   if (val && typeof val !== 'string') val = '';
@@ -14,7 +15,7 @@ const userSchema = Schema({
   },
   username: {
     type: String,
-    required: true,
+    required: isSocialSignOn,
     unique: true,
     index: true,
   },
@@ -26,7 +27,7 @@ const userSchema = Schema({
   },
   password: {
     type: String,
-    required: false,
+    required: isSocialSignOn,
     set: createPasswordHash,
   },
   isAdmin: {
@@ -34,8 +35,21 @@ const userSchema = Schema({
     required: false,
     default: false,
     immutable: true
+  },
+  googleId: {
+    type: String,
+    required: false,
+    default: null,
+    immutable: true
   }
 })
+
+function isSocialSignOn() {
+  if ((this.googleId)) {
+    return false;
+  }
+  return true;
+}
 
 // Return JWT token
 userSchema.methods.generateJWT = function () {
@@ -48,7 +62,10 @@ userSchema.options.toJSON = {
   transform: function (doc, ret, options) {
     delete ret.password;
     delete ret.__v;
+    delete googleId;
     return ret;
   }
 }
+
+userSchema.plugin(findOrCreate);
 module.exports = model('User', userSchema);

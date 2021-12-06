@@ -4,8 +4,11 @@ const router = express.Router();
 const toMillis = require('parse-duration');
 const requireAuthMiddleware = require('../middleware/require-auth');
 const handleLoginMiddleware = require('../middleware/handlePasswordLogin');
+const googleLoginMiddleware = require('../middleware/handleGoogleSignon');
 
 const jwtTokenName = process.env.JWT_COOKIE_NAME;
+// set cookie lasting as long as jwt token expiry
+const JWT_TOKENCOOKIE_DURATION = toMillis(process.env.JWT_EXPIRES_IN)
 
 router.post('/login',
   handleLoginMiddleware(),
@@ -19,10 +22,8 @@ router.post('/login',
       let response = {
         user
       }
-      // set cookie lasting as long as jwt token expiry
-      const JWT_TOKEN_DURATION = toMillis(process.env.JWT_EXPIRES_IN)
       res.cookie(jwtTokenName, jwtoken, {
-        maxAge: JWT_TOKEN_DURATION
+        maxAge: JWT_TOKENCOOKIE_DURATION
       });
       res.status(200).send(response);
     }
@@ -54,4 +55,26 @@ router.get(
     res.status(204).send()
   })
 
+router.get(
+  '/auth/google',
+  passport.authenticate('google', { session: false, scope: ['profile', 'email'] }),
+)
+router.get('/auth/google/callback',
+  function (req, res, next) {
+    console.debug("calling auth google callback");
+    next()
+  },
+  googleLoginMiddleware(),
+  function (req, res) {
+    console.debug('done calling google middleware');
+    let { user } = res?.locals
+    if (user) {
+      let jwtoken = user.generateJWT();
+      res.cookie(jwtTokenName, jwtoken, {
+        maxAge: JWT_TOKENCOOKIE_DURATION
+      })
+      return res.redirect(process.env.FRONTEND_URL)
+    }
+  }
+);
 module.exports = router
