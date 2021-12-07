@@ -90,13 +90,18 @@ export default function Login() {
               />
             </FloatingLabel>
             
-            <div className="d-flex justify-content-end mb-2 gap-sm">
+            <div className="d-flex justify-content-end mb-2 gap-sm me-1">
               <Button 
                 type="submit" 
                 variant="primary"
-                className="me-1"
               >
                 Log in
+              </Button>
+              <Button 
+                variant="secondary"
+                onClick={()=>{navigate('/register');}}
+              >
+                Register
               </Button>
             </div>
             

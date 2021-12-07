@@ -5,7 +5,7 @@ const toMillis = require('parse-duration');
 const requireAuthMiddleware = require('../middleware/require-auth');
 const handleLoginMiddleware = require('../middleware/handlePasswordLogin');
 const googleLoginMiddleware = require('../middleware/handleGoogleSignon');
-
+const userModel = require('../models/user');
 const jwtTokenName = process.env.JWT_COOKIE_NAME;
 // set cookie lasting as long as jwt token expiry
 const JWT_TOKENCOOKIE_DURATION = toMillis(process.env.JWT_EXPIRES_IN)
@@ -61,12 +61,10 @@ router.get(
 )
 router.get('/auth/google/callback',
   function (req, res, next) {
-    console.debug("calling auth google callback");
     next()
   },
   googleLoginMiddleware(),
   function (req, res) {
-    console.debug('done calling google middleware');
     let { user } = res?.locals
     if (user) {
       let jwtoken = user.generateJWT();
@@ -77,4 +75,17 @@ router.get('/auth/google/callback',
     }
   }
 );
+
+router.post('/register', function (req, res, next) {
+  const params = req.body;
+  if (params?.isAdmin) {
+    delete params.isAdmin;
+  }
+  userModel.create(params, function (err, user) {
+    if (err) {
+      return next(err);
+    }
+    return res.status(201).json(user);
+  });
+})
 module.exports = router

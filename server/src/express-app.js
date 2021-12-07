@@ -3,6 +3,7 @@ const path = require('path');
 const express = require('express');
 const fileUpload = require('express-fileupload');
 const cookieParser = require('cookie-parser')
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
@@ -39,4 +40,6 @@ fs.readdirSync(path.resolve(__dirname, ROUTES_PATH)).forEach(filename => {
 });
 
 app.use(ROUTE_PREFIX + "/test", (req, res) => { res.send('welcome to PFlix API') })
+
+
 module.exports = app;
