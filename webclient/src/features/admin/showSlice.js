@@ -75,8 +75,8 @@ const showSlice = createSlice({
       state.editShowResponse = {};
     },
     clearCreateShowStatus:(state)=> {
-      state.editShowStatus = "idle";
-      state.editShowResponse = {};
+      state.createShowStatus = "idle";
+      state.createShowResponse = {};
     }
   },
   extraReducers: builder=>{

@@ -2,15 +2,22 @@ const fs = require('fs');
 const path = require('path');
 const express = require('express');
 const fileUpload = require('express-fileupload');
+const cookieParser = require('cookie-parser')
+
 const app = express();
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(fileUpload({
   createParentPath: true
 }));
-// app.use(bodyParser.urlencoded({extended:true}));
-// app.use(bodyParser.json());
-// register all routers on /routes
+app.use(cookieParser());
+
+// load strategies
+fs.readdirSync(path.resolve(__dirname, "passport-strategies")).forEach(filename => {
+  require(`./passport-strategies/${filename}`);
+});
+
+/* register all routers on /routes */
 
 /**
  * prefix for all the routes on backend
@@ -33,4 +40,6 @@ fs.readdirSync(path.resolve(__dirname, ROUTES_PATH)).forEach(filename => {
 });
 
 app.use(ROUTE_PREFIX + "/test", (req, res) => { res.send('welcome to PFlix API') })
+
+
 module.exports = app;
