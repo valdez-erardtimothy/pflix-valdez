@@ -42,7 +42,7 @@ export default function List() {
       <main>
         <h1>Actors</h1>
         <Link
-          to="admin/actors/create"
+          to="create"
           className="material-icons text-decoration-none"
         >
           add

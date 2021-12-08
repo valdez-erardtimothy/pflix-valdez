@@ -14,7 +14,7 @@ import EditShow from './pages/admin/show/Edit.jsx';
 
 
 import ActorList from './pages/admin/actor/List.jsx';
-import CreateActor from './pages/admin/show/Create.jsx';
+import CreateActor from './pages/admin/actor/Create.jsx';
 import Dashboard from './pages/admin/Dashboard.jsx';
 // layout imports
 import AdminLayout from './layouts/Admin.jsx';

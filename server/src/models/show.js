@@ -25,7 +25,7 @@ const showSchema = Schema({
   },
   images: [{
     type: String,
-    required: true
+    required: false,
   }]
 }, { timestamps: true });
 
