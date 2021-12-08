@@ -13,6 +13,8 @@ import ReadShow from './pages/admin/show/Read.jsx';
 import EditShow from './pages/admin/show/Edit.jsx';
 
 
+import ActorList from './pages/admin/actor/List.jsx';
+import CreateActor from './pages/admin/show/Create.jsx';
 import Dashboard from './pages/admin/Dashboard.jsx';
 // layout imports
 import AdminLayout from './layouts/Admin.jsx';
@@ -41,6 +43,14 @@ const routes = () => {
         <Route path="shows">
           <Route index element={<ShowList/>}/>
           <Route path="create" element={<CreateShow/>}/>
+          <Route path=":id">
+            <Route index element={<ReadShow/>}/>
+            <Route path="edit" element={<EditShow/>}/>
+          </Route>
+        </Route>
+        <Route path="actors">
+          <Route index element={<ActorList/>}/>
+          <Route path="create" element={<CreateActor/>}/>
           <Route path=":id">
             <Route index element={<ReadShow/>}/>
             <Route path="edit" element={<EditShow/>}/>
