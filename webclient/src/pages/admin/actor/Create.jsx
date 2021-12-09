@@ -40,7 +40,7 @@ export default function Create() {
             <Form.Control 
               as="textarea"
               type="text" 
-              name="notes " 
+              name="notes" 
               placeholder="Notes"
             />
           </FloatingLabel>
