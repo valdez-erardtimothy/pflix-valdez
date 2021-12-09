@@ -1,7 +1,7 @@
 const actor = require('../../models/actor.js');
 const { saveUpload } = require('../../utils/assetHandler');
-const actorController = {};
 
+let actorController = {};
 actorController.list = async (req, res, next) => {
   actor.find({}, function (err, actors) {
     if (err) {
@@ -29,4 +29,11 @@ actorController.create = async (req, res) => {
   return res.status(201).json({ actor: newActor });
 }
 
+actorController.read = async (req, res, next) => {
+  actor.findById(req.params.id, function (err, actor) {
+    if (err) return next(err)
+    res.status(200).send({ actor: actor });
+
+  });
+}
 module.exports = actorController

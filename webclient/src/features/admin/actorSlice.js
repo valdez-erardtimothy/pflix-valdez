@@ -7,6 +7,12 @@ export const create = createAsyncThunk(
   }
 );
 
+export const fetchActor = createAsyncThunk(
+  'admin/actor/fetchActor', async(id) => {
+    let {data} = await axios.get('/api/admin/actors/'+id);
+    return data.actor;
+  }
+);
 const actorSlice = createSlice({
   name:"admin/actor",
   initialState:{
@@ -17,6 +23,9 @@ const actorSlice = createSlice({
     fetchStatus:"idle",
   }, 
   reducers: {
+    clearFetchStatus: (state)=> { 
+      state.fetchStatus = "idle";
+    },
     clearCreateStatus: (state)=>{
       state.createStatus="idle";
     },
@@ -36,11 +45,22 @@ const actorSlice = createSlice({
       .addCase(create.rejected, (state, action)=>{
         state.createStatus = "failed";
         state.error = action.error;
+      })
+      .addCase(fetchActor.pending, (state)=>{
+        state.fetchStatus = "loading";
+      })
+      .addCase(fetchActor.fulfilled, (state, action)=>{
+        state.fetchStatus = "success";
+        state.loadedActor = action.payload;
+      })
+      .addCase(fetchActor.rejected, (state, action)=>{
+        state.fetchStatus = "failed";
+        state.error = action.error;
       });
     
   }
 });
 
-export const {clearError,clearCreateStatus} = actorSlice.actions;
+export const {clearFetchStatus,clearError,clearCreateStatus} = actorSlice.actions;
 
 export default actorSlice.reducer;

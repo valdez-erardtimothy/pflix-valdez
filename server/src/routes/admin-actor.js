@@ -9,14 +9,15 @@ router.use("/admin", requireAdminMiddleware());
 const {
   list,
   create,
+  read,
 } = require("../controllers/admin/actorController");
 
 router.route('/admin/actors')
   .get(list)
   .post(create);
 
-// router.route('/admin/shows/:id')
-//   .get(read)
+router.route('/admin/actors/:id')
+  .get(read)
 //   .delete(destroy)
 //   .patch(update);
 
