@@ -25,7 +25,8 @@ actorController.create = async (req, res) => {
       imgPaths.push(await saveUpload(img, 'uploads/actors'));
     }));
   }
-  return await actor.create({ ...fields, images: imgPaths });
+  const newActor = await actor.create({ ...fields, images: imgPaths });
+  return res.status(201).json({ actor: newActor });
 }
 
 module.exports = actorController

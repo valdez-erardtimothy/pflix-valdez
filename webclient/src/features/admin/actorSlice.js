@@ -14,7 +14,16 @@ const actorSlice = createSlice({
     status:"idle",
     error: '',
     createStatus:"idle",
-  },
+    fetchStatus:"idle",
+  }, 
+  reducers: {
+    clearCreateStatus: (state)=>{
+      state.createStatus="idle";
+    },
+    clearError: (state) => {
+      state.error = '';
+    }
+  },  
   extraReducers: builder=> {
     builder
       .addCase(create.pending, (state)=>{
@@ -27,9 +36,11 @@ const actorSlice = createSlice({
       .addCase(create.rejected, (state, action)=>{
         state.createStatus = "failed";
         state.error = action.error;
-      })
-    ;
+      });
+    
   }
 });
+
+export const {clearError,clearCreateStatus} = actorSlice.actions;
 
 export default actorSlice.reducer;
