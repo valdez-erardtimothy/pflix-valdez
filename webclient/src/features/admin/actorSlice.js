@@ -20,15 +20,25 @@ export const edit = createAsyncThunk(
     return data.actor;
   }
 );
+
+export const deleteActor = createAsyncThunk(
+  'admin/actor/delete', async(id) => {
+    let response = await axios.delete(`/api/admin/actors/${id}`);
+    return response.data;
+  }
+);
+
 const actorSlice = createSlice({
   name:"admin/actor",
   initialState:{
     loadedActor:{},
+    deletedActor:{},
     status:"idle",
     error: '',
     createStatus:"idle",
     fetchStatus:"idle",
-    editStatus:"idle"
+    editStatus:"idle",
+    deleteStatus:"idle"
   }, 
   reducers: {
     clearFetchStatus: (state)=> { 
@@ -40,6 +50,12 @@ const actorSlice = createSlice({
     clearEditStatus: (state)=>{
       state.editStatus="idle";
     },
+    clearDeleteStatus: (state)=>{
+      state.deleteStatus="idle";
+    },
+    clearDeleted: (state=>{
+      state.deletedActor={};
+    }),
     clearError: (state) => {
       state.error = '';
     }
@@ -76,6 +92,17 @@ const actorSlice = createSlice({
         state.loadedActor = action.payload;
       })
       .addCase(edit.rejected, (state, action)=>{
+        state.deleteStatus = "failed";
+        state.error = action.error;
+      })
+      .addCase(deleteActor.pending, (state)=>{
+        state.deleteStatus = "loading";
+      })
+      .addCase(deleteActor.fulfilled, (state, action)=>{
+        state.deleteStatus = "success";
+        state.deletedActor = action.payload.actor;
+      })
+      .addCase(deleteActor.rejected, (state, action)=>{
         state.editStatus = "failed";
         state.error = action.error;
       });
@@ -87,7 +114,9 @@ export const {
   clearFetchStatus,
   clearError,
   clearCreateStatus,
-  clearEditStatus
+  clearEditStatus,
+  clearDeleteStatus,
+  clearDeleted
 } = actorSlice.actions;
 
 export default actorSlice.reducer;

@@ -1,16 +1,32 @@
 import React, { useEffect }  from 'react';
 import { Helmet } from 'react-helmet-async';
-import {Container, Table} from 'react-bootstrap';
+import {Button, Container, Table} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
+import {useAlert} from 'react-alert';
 
-import { fetchActors, resetStatus } from '../../../features/admin/actorsSlice';
+import { 
+  fetchActors, 
+  resetStatus,
+  removeFromList
+} from '../../../features/admin/actorsSlice';
+import { 
+  deleteActor, 
+  clearDeleted, 
+  clearDeleteStatus
+} from '../../../features/admin/actorSlice';
 import { startLoad,endLoad } from '../../../features/loadingSlice';
+
 export default function List() {
+  const dispatch = useDispatch();
+  const alert = useAlert();
   const {
     actors, status
   } = useSelector(state=>state.admin.actors);
-  const dispatch = useDispatch();
+  const {
+    deletedActor,
+    deleteStatus
+  } = useSelector(state=>state.admin.actor);
   // load actors on page visit
   useEffect(() => {
     dispatch(fetchActors());
@@ -33,6 +49,28 @@ export default function List() {
       break;
     }
   }, [status]);
+
+  useEffect(async()=> {
+    
+    switch (deleteStatus) {
+    case 'loading':
+      dispatch(startLoad());
+      break;
+    case 'success':
+      dispatch(endLoad());  
+      alert.success('Deleted actor');
+      dispatch(removeFromList(deletedActor));
+      dispatch(clearDeleteStatus());
+      dispatch(clearDeleted());
+      break;
+    case 'failed':
+      alert.error('Delete actor failed');
+      dispatch(endLoad());  
+      break;
+    default:
+      break;
+    }
+  }, [deleteStatus]);
 
   return<>
     <Helmet>
@@ -68,6 +106,23 @@ export default function List() {
                     </td>
                     <td>
                       {actor.notes}
+                    </td>
+                    <td>
+                      
+                      <Button 
+                        as={Link}
+                        to={`${actor._id}/edit`} 
+                        className="text-sm material-icons">
+            edit
+                      </Button>
+                      <Button
+                        variant="danger"
+                        onClick={()=>{dispatch(deleteActor(actor._id));}}
+                        size="sm"
+                        className="material-icons"
+                      >
+            delete
+                      </Button>
                     </td>
                   </tr>
                 ))

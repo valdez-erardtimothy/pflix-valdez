@@ -77,4 +77,14 @@ actorController.update = async (req, res) => {
     }
   });
 }
-module.exports = actorController
+
+actorController.destroy = async (req, res) => {
+  let { id } = req.params;
+  actor.findOneAndDelete({ _id: id }, function (err, data) {
+    if (err) {
+    }
+    res.status(200).send({ actor: data });
+  });
+};
+
+module.exports = actorController;
