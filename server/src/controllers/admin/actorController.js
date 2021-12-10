@@ -14,9 +14,10 @@ actorController.list = async (req, res, next) => {
 };
 
 actorController.create = async (req, res, next) => {
-  let uploads = req.files?.images;
   let imgPaths = [];
   let fields = req.body;
+  // handle uploads
+  let uploads = req.files?.images;
   if (uploads !== undefined) {
     if (!Array.isArray(uploads)) {
       uploads = [uploads]
@@ -41,13 +42,16 @@ actorController.read = async (req, res, next) => {
 }
 
 actorController.update = async (req, res) => {
-  let uploads = req.files?.images;
   let imgPaths = [];
   let fields = req.body;
+  let uploads = req.files?.images;
   actor.findById(req.params.id, async function (findError, existingActor) {
+    // let mongoose handle errors
     if (findError) {
       return next(findError);
     }
+
+    // handle uploads
     if (uploads !== undefined) {
       // delete existing pics
       if (existingActor?.images?.length > 0) {
@@ -57,16 +61,15 @@ actorController.update = async (req, res) => {
           )
         );
       }
-      // 
+      // save all uploads
       if (!Array.isArray(uploads)) {
         uploads = [uploads]
       }
       await Promise.all(uploads.map(async (img) => {
         imgPaths.push(await saveUpload(img, 'uploads/actors'));
       }));
-      console.debug('fields before adding img', fields);
+      // add image URL array to document
       fields = { ...fields, images: imgPaths };
-      console.debug('fields before after img', fields);
     }
     existingActor.overwrite(fields);
     try {
