@@ -45,7 +45,13 @@ export default function Read() {
         <title>{loadedActor.name}</title>
       </Helmet>
       <Container as="main" fluid>
-        <h1>{loadedActor.name}</h1>
+        <h1>{loadedActor.name}
+          <Link 
+            to="edit" 
+            className="text-sm material-icons">
+            edit
+          </Link>
+        </h1>
         <h6>Back to <Link to="/admin/actors">Actors</Link></h6>
         <h4>Notes</h4>
         <p>{loadedActor.notes}</p>

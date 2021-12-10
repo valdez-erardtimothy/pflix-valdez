@@ -1,4 +1,5 @@
 let path = require('path');
+let fsPromises = require('fs/promises');
 let helpers = {}
 
 let assetPath = process.env.ASSET_PATH;
@@ -18,6 +19,22 @@ helpers.saveUpload = async (file, urlPath) => {
       }
     });
   })
+}
+
+/**
+ * 
+ * @param {*} urlPath includes filename already 
+ */
+helpers.removeUploaded = async (urlPath) => {
+  let stripPathFromURL = "api/assets/";
+
+  let strippedUrl = urlPath.replace(stripPathFromURL, '');
+  console.debug("asset path", assetPath);
+  console.debug("urlpath:", urlPath)
+  console.debug("stripping path", stripPathFromURL);
+  console.debug("stripped url", strippedUrl)
+  console.debug("unlink path:", `${assetPath}/${strippedUrl}`)
+  return fsPromises.unlink(`${assetPath}/${strippedUrl}`)
 }
 
 

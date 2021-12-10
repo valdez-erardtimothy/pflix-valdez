@@ -10,6 +10,7 @@ const {
   list,
   create,
   read,
+  update
 } = require("../controllers/admin/actorController");
 
 router.route('/admin/actors')
@@ -18,7 +19,7 @@ router.route('/admin/actors')
 
 router.route('/admin/actors/:id')
   .get(read)
-//   .delete(destroy)
-//   .patch(update);
+  //   .delete(destroy)
+  .patch(update);
 
 module.exports = router;
