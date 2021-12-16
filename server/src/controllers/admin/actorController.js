@@ -1,5 +1,6 @@
 const actor = require('../../models/actor.js');
 const { saveUpload, removeUploaded } = require('../../utils/assetHandler');
+const filmography = require('../../models/filmography.js');
 
 let actorController = {};
 actorController.list = async (req, res, next) => {
@@ -33,15 +34,19 @@ actorController.create = async (req, res, next) => {
   } catch (e) { return next(e) }
 }
 
+
 actorController.read = async (req, res, next) => {
   actor.findById(req.params.id, function (err, actor) {
-    if (err) return next(err)
-    res.status(200).send({ actor: actor });
-
+    if (err) return next(err);
+    filmography.find({ actor: actor._id }, function (err, films) {
+      if (err) return next(err);
+      actor.filmography = films;
+      res.status(200).send({ actor: actor });
+    })
   });
 }
-
-actorController.update = async (req, res) => {
+// update the entry
+actorController.update = async (req, res, next) => {
   let imgPaths = [];
   let fields = req.body;
   let uploads = req.files?.images;
@@ -49,6 +54,18 @@ actorController.update = async (req, res) => {
     // let mongoose handle errors
     if (findError) {
       return next(findError);
+    }
+
+    // merge filmography fields into one array of objects
+    let filmographyData = [];
+    if (fields['characters[]'] && fields['actors[]'] && fields['shows[]']) {
+      for (let i = 0; i < fields['shows[]'].length; i++) {
+        filmographyData.push({
+          character: fields['characters[]'][i],
+          actor: fields['actors[]'][i],
+          show: fields['shows[]'][i]
+        })
+      }
     }
 
     // handle uploads
@@ -74,6 +91,8 @@ actorController.update = async (req, res) => {
     existingActor.overwrite(fields);
     try {
       const updated = await existingActor.save();
+      await filmography.deleteMany({ actor: existingActor._id });
+      await filmography.insertMany(filmographyData);
       return res.status(200).send({ actor: updated });
     } catch (updateError) {
       return next(updateError);

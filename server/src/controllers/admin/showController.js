@@ -13,15 +13,21 @@ showController.read = async (req, res) => {
     if (err) {
       res.send(err);
     } else {
-      console.debug(data);
       res.send({ show: data });
     }
   });
 };
 
+showController.titles = async (req, res, next) => {
+  let query = show.find({}).select('_id title');
+  query.exec(function (err, shows) {
+    if (err) return next(err);
+    res.status(200).json({ shows });
+  });
+}
+
 showController.create = async (req, res) => {
   let { title, released, runtimeMinutes, plot, showType } = req.body;
-  console.debug("body:", req.body);
   let uploads = req.files?.images;
   let imgPaths = [];
   if (uploads !== undefined) {
@@ -53,7 +59,6 @@ showController.create = async (req, res) => {
 
 showController.destroy = async (req, res) => {
   let { id } = req.params;
-  console.debug('show destroy route');
   show.findOneAndDelete({ _id: id }, function (err, data) {
     if (err) {
       res.status(400).send("error in deleting show!", err);
@@ -76,13 +81,10 @@ showController.update = async (req, res) => {
     await Promise.all(uploads.map(async (img) => {
       images.push(await saveUpload(img, 'uploads/shows'));
     }))
-    console.debug("image data:", images)
     formData = { ...formData, images }
-    console.debug("form data:", formData)
 
   }
 
-  console.debug("request images:", req.files);
   show.findByIdAndUpdate(id, formData, function (err, show) {
     if (err) {
       res.status(422).send(err);

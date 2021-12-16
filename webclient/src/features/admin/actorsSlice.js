@@ -7,7 +7,6 @@ export const fetchActors = createAsyncThunk(
   'admin/actors/fetchActors', 
   async()=>{
     let response = await axios.get('/api/admin/actors/');
-    console.debug("fetch actor response:", response);
     return response.data.actors;
   }
 );
@@ -22,12 +21,15 @@ const actorsSlice = createSlice({
   reducers: {
     removeFromList: (state, action) => {
       let actorToDelete = action.payload;
-      state.actors = state.actors.filter(
-        actor=>actor._id!==actorToDelete._id
-      );
+      // wrap in if statement to prevent error when actors is empty
+      if(state.actors) {
+        state.actors = state.actors.filter(
+          actor=>actor._id!==actorToDelete._id
+        ) || [];
+
+      }
     },
     resetStatus: (state) => {
-      console.debug('resetstatus called');
       state.status="idle";
     }
   }, 

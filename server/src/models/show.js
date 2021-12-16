@@ -29,4 +29,4 @@ const showSchema = Schema({
   }]
 }, { timestamps: true });
 
-module.exports = model('Shows', showSchema);
+module.exports = model('Show', showSchema);

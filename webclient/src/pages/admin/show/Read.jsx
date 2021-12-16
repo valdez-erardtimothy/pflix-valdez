@@ -45,7 +45,6 @@ export default function Read() {
   
   // handle delete 
   useEffect(()=> {
-    
     switch (deleteShowStatus) {
     case 'loading':
       dispatch(startLoad());

@@ -8,6 +8,8 @@ import {fetchActor, edit,clearEditStatus} from '../../../features/admin/actorSli
 import ImgFieldGallery from '../../../components/ImgFieldGallery';
 import { endLoad, startLoad } from '../../../features/loadingSlice';
 import { useAlert } from 'react-alert';
+import CharacterInputs from './CharacterInputs';
+import { fetchTitles } from '../../../features/admin/showsSlice';
 
 export default function Create() {
   // hooks
@@ -22,6 +24,7 @@ export default function Create() {
     createStatus, 
     fetchStatus,
     error,
+    editStatus,
     loadedActor
   } = useSelector(state=>state.admin.actor);
   
@@ -40,6 +43,7 @@ export default function Create() {
   useEffect(() => {
     dispatch(fetchActor(id));
     dispatch(clearEditStatus());
+    dispatch(fetchTitles());
     return ()=>{
       dispatch(clearEditStatus());
     };
@@ -77,6 +81,22 @@ export default function Create() {
       break;
     }
   }, [createStatus]);
+
+  useEffect(() => {
+    switch(editStatus){
+    case "loading":
+      dispatch(startLoad());
+      break;
+    case "success":
+      dispatch(endLoad());
+      alert.success('Updated Actor!');
+      navigate('/admin/actors/'+id);
+      break;
+    case"failed":
+      dispatch(endLoad());
+      break;
+    }
+  }, [editStatus]);
   
   return (
     <>
@@ -132,6 +152,8 @@ export default function Create() {
               onChange={e=>{setImgUploads(e.target.files);}}
             />
           </Form.Group>
+
+          <CharacterInputs actorId={id} initialList={loadedActor.filmography}/>
           <Button type="submit">Submit</Button>
           
           {imgUploads.length>0 && (<>

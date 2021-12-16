@@ -11,12 +11,15 @@ const {
   create,
   destroy,
   read,
-  update
+  update,
+  titles
 } = require("../controllers/admin/showController");
 
 router.route('/admin/shows')
   .get(list)
   .post(create);
+
+router.get('/admin/show-titles', titles);
 
 router.route('/admin/shows/:id')
   .get(read)

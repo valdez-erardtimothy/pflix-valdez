@@ -97,7 +97,7 @@ export default function Read() {
             <h4>Gallery</h4>
             <Row>
               {loadedActor.images.map(img=> (
-                <Col xs="12" sm="4" lg="3" className="p-2" key="img">
+                <Col xs="12" sm="4" lg="3" className="p-2" key={img}>
                   <Image  src={img} fluid max-height="600px"/>
                 </Col>
               ))}
