@@ -125,9 +125,11 @@ actorController.update = async (req, res, next) => {
 
 actorController.destroy = async (req, res) => {
   let { id } = req.params;
-  actor.findOneAndDelete({ _id: id }, function (err, data) {
+  actor.findOneAndDelete({ _id: id }, async function (err, data) {
     if (err) {
+      return next(err)
     }
+    await filmography.deleteMany({ actor: id })
     res.status(200).send({ actor: data });
   });
 };

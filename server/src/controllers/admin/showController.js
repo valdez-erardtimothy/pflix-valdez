@@ -1,3 +1,4 @@
+const filmography = require('../../models/filmography.js');
 const show = require('../../models/show.js');
 const { saveUpload } = require('../../utils/assetHandler');
 const showController = {};
@@ -9,12 +10,15 @@ showController.list = async (req, res) => {
 
 showController.read = async (req, res) => {
   let { id } = req.params;
-  show.findById(id, function (err, data) {
+  show.findById(id, async function (err, data) {
     if (err) {
-      res.send(err);
-    } else {
-      res.send({ show: data });
+      return res.status(500).send(err);
     }
+    data = data.toObject();
+    data.cast = await filmography.find({ show: data._id })
+      .populate('actor')
+      .exec();
+    return res.status(200).send({ show: data });
   });
 };
 
@@ -34,11 +38,9 @@ showController.create = async (req, res) => {
     if (!Array.isArray(uploads)) {
       uploads = [uploads]
     }
-
     await Promise.all(uploads.map(async (img) => {
       imgPaths.push(await saveUpload(img, 'uploads/shows'));
     }))
-
   }
 
   show.create({
@@ -59,10 +61,11 @@ showController.create = async (req, res) => {
 
 showController.destroy = async (req, res) => {
   let { id } = req.params;
-  show.findOneAndDelete({ _id: id }, function (err, data) {
+  show.findOneAndDelete({ _id: id }, async function (err, data) {
     if (err) {
-      res.status(400).send("error in deleting show!", err);
+      return res.status(400).send("error in deleting show!", err);
     }
+    await filmography.deleteMany({ show: id });
     res.status(200).send({ show: data });
   });
 };
