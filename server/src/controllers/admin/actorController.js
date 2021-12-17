@@ -1,6 +1,7 @@
 const actor = require('../../models/actor.js');
 const { saveUpload, removeUploaded } = require('../../utils/assetHandler');
 const filmography = require('../../models/filmography.js');
+const removeDuplicate = require('../../utils/removeDuplicate.js');
 
 let actorController = {};
 actorController.list = async (req, res, next) => {
@@ -79,15 +80,14 @@ actorController.update = async (req, res, next) => {
           })
         }
       } else {
-
         filmographyData.push({
           character: fields['characters[]'],
           actor: fields['actors[]'],
           show: fields['shows[]']
         })
       }
-
     }
+    filmographyData = removeDuplicate(filmographyData, 'shows')
 
     // handle uploads
     if (uploads !== undefined) {
