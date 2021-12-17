@@ -6,10 +6,12 @@
  */
 module.exports = function (array, property = null) {
   if (property) {
-    return array.filter((row, index, self) => self.findIndex(
-      obj => obj[property] === row[property]
-    ) === index
-    )
+    console.debug('is object array')
+    return array.filter((row, index, self) => (
+      self.findIndex(obj => (
+        obj[property] === row[property]
+      )) === index
+    ))
   } else {
     return Array.from(new Set(array));
   }

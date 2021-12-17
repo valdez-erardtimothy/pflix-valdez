@@ -39,16 +39,18 @@ actorController.create = async (req, res, next) => {
 actorController.read = async (req, res, next) => {
   actor.findById(req.params.id, function (err, actor) {
     if (err) return next(err);
-    filmography.find({ actor: actor._id }, function (err, films) {
-      if (err) return next(err);
+    filmography.find({ actor: actor._id })
+      .populate('show')
+      .exec(function (err, films) {
+        if (err) return next(err);
 
-      actor = {
-        ...actor.toObject(),
-        filmography: films
-      }
-      console.debug('actor read with filmography:', actor);
-      res.status(200).send({ actor: actor });
-    })
+        actor = {
+          ...actor.toObject(),
+          filmography: films
+        }
+        console.debug('actor read with filmography:', actor);
+        res.status(200).send({ actor: actor });
+      })
   });
 }
 // update the entry
@@ -87,7 +89,7 @@ actorController.update = async (req, res, next) => {
         })
       }
     }
-    filmographyData = removeDuplicate(filmographyData, 'shows')
+    filmographyData = removeDuplicate(filmographyData, 'show')
 
     // handle uploads
     if (uploads !== undefined) {

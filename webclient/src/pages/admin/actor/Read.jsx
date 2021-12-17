@@ -11,7 +11,7 @@ import {
 import { endLoad, startLoad } from '../../../features/loadingSlice';
 import { useAlert } from 'react-alert';
 import { Helmet } from 'react-helmet-async';
-import { Button, Container, Row, Col, Image} from 'react-bootstrap';
+import { Button, Container, Row, Col, Image, Table} from 'react-bootstrap';
 import { Link } from 'react-router-dom';
 export default function Read() {
   let {id} = useParams(); 
@@ -91,6 +91,28 @@ export default function Read() {
         <h6>Back to <Link to="/admin/actors">Actors</Link></h6>
         <h4>Notes</h4>
         <p>{loadedActor.notes}</p>
+        <h4>Filmography</h4>
+        {loadedActor?.filmography && 
+        <>
+          <Table striped bordered >
+            <thead>
+              <tr>
+                <th>Show</th>
+                <th>Character</th>
+              </tr>
+            </thead>
+            <tbody>
+              {loadedActor.filmography.map(
+                show=>(
+                  <tr key={show._id}>
+                    <td>{show.show.title}</td>
+                    <td>{show.character}</td>
+                  </tr>
+                )
+              )}
+            </tbody>
+          </Table>
+        </>}
         <hr />
         {loadedActor.images?.length > 0&& (
           <>
