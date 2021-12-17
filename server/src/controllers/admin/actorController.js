@@ -40,7 +40,12 @@ actorController.read = async (req, res, next) => {
     if (err) return next(err);
     filmography.find({ actor: actor._id }, function (err, films) {
       if (err) return next(err);
-      actor.filmography = films;
+
+      actor = {
+        ...actor.toObject(),
+        filmography: films
+      }
+      console.debug('actor read with filmography:', actor);
       res.status(200).send({ actor: actor });
     })
   });
@@ -55,17 +60,33 @@ actorController.update = async (req, res, next) => {
     if (findError) {
       return next(findError);
     }
-
+    console.debug('request body:', req.body);
     // merge filmography fields into one array of objects
     let filmographyData = [];
     if (fields['characters[]'] && fields['actors[]'] && fields['shows[]']) {
-      for (let i = 0; i < fields['shows[]'].length; i++) {
+      if (Array.isArray(fields['characters[]'])) {
+        for (let i = 0; i < fields['shows[]'].length; i++) {
+          console.debug(
+            "processing filmography entry: ",
+            fields['characters[]'][i],
+            fields['actors[]'][i],
+            fields['shows[]'][i]
+          )
+          filmographyData.push({
+            character: fields['characters[]'][i],
+            actor: fields['actors[]'][i],
+            show: fields['shows[]'][i]
+          })
+        }
+      } else {
+
         filmographyData.push({
-          character: fields['characters[]'][i],
-          actor: fields['actors[]'][i],
-          show: fields['shows[]'][i]
+          character: fields['characters[]'],
+          actor: fields['actors[]'],
+          show: fields['shows[]']
         })
       }
+
     }
 
     // handle uploads

@@ -1,7 +1,6 @@
 import React, {useState, useEffect} from 'react';
-import { Button, Form, Table } from 'react-bootstrap';
-import { useSelector } from 'react-redux';
-
+import { Button, Table } from 'react-bootstrap';
+import FieldRow from './CharacterFieldRow';
 
 /**
  * 
@@ -17,9 +16,6 @@ export default function  CharacterInputs({
 }) {
   let [characters, setCharacters] = useState([]);
   let [index, setIndex] = useState(0);
-  const {
-    titles=[]
-  } = useSelector(state=>state.admin.shows);
 
   useEffect(() => {
     setCharacters(
@@ -27,7 +23,7 @@ export default function  CharacterInputs({
         let field = {
           i:index,
           actor:character.actor._id,
-          film:character.film._id,
+          show:character.show._id,
           character:character.character
         };
         setIndex(index+1);
@@ -37,37 +33,7 @@ export default function  CharacterInputs({
     
   }, []); 
 
-  const fieldRow = (character) => {
-    
-    return <tr key={character._id}>
-      <td>
-        <Form.Select name={showFieldName}>
-          {titles.map(title=>(
-            <option key={title._id} value={title._id}>
-              {title.title}
-            </option>
-          ))}
-        </Form.Select>
-      </td>
-      <td>
-        <Form.Control name={characterFieldName}/>
-      </td>
-      <td>
-        <Button 
-          className="material-icons" 
-          variant="danger"
-          onClick={()=>{deleteCharacter(character.i);}}
-        >
-            delete
-        </Button>
-      </td>
-      <Form.Control 
-        type="hidden" 
-        name={actorFieldName} 
-        value={character?.actor || actorId}
-      />
-    </tr>;
-  };
+
 
   const addCharacter = () => {
     let copy = characters.slice();
@@ -106,7 +72,15 @@ export default function  CharacterInputs({
         </thead>
         <tbody>
           {characters.map((character)=> (
-            fieldRow(character)
+            <FieldRow key={character.i}
+              character={character} 
+              deleteHandler={()=>deleteCharacter(character.i)}
+              actorFieldName={actorFieldName}
+              showFieldName={showFieldName}
+              characterFieldName={characterFieldName}
+              actorId={actorId}
+              
+            />
           ))}
         </tbody>
       </Table>

@@ -11,7 +11,7 @@ import { useAlert } from 'react-alert';
 import CharacterInputs from './CharacterInputs';
 import { fetchTitles } from '../../../features/admin/showsSlice';
 
-export default function Create() {
+export default function Edit() {
   // hooks
   const {id} = useParams();
   const dispatch = useDispatch();

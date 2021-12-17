@@ -13,8 +13,8 @@ const filmographySchema = Schema({
     required: true
   },
   character: {
-    Type: String,
-    required: false
+    type: String,
+    required: true
   }
 });
 
