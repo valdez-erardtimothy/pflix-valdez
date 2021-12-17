@@ -2,7 +2,7 @@ import React, { useEffect} from 'react';
 import {Helmet} from 'react-helmet-async';
 import {Container} from 'react-bootstrap';
 import {Link, useParams, useNavigate} from 'react-router-dom';
-import {Button, Image,Table, Row, Col} from 'react-bootstrap';
+import {Button, Image, Table, Row, Col, ListGroup} from 'react-bootstrap';
 import { useDispatch, useSelector } from 'react-redux';
 import { startLoad, endLoad } from '../../../features/loadingSlice';
 import { fetchShowAdmin, deleteShow } from '../../../features/admin/showSlice';
@@ -45,7 +45,6 @@ export default function Read() {
   
   // handle delete 
   useEffect(()=> {
-    
     switch (deleteShowStatus) {
     case 'loading':
       dispatch(startLoad());
@@ -110,7 +109,19 @@ export default function Read() {
           <p>Release Date: {new Date(show.released).toDateString()}</p>
           <h4>Plot</h4>
           <p>{show.plot}</p>
-
+          <h4>Cast</h4>
+          {show.cast && <ListGroup>
+            {show.cast.map(character=>(
+              character?.actor && <ListGroup.Item as={Link}
+                key={character._id}
+                to={`/admin/actors/${character.actor._id}`}
+                action
+              >
+                <strong>{character.actor.name}</strong> as
+                {character.character}
+              </ListGroup.Item>
+            ))}
+          </ListGroup>|| <p>no cast</p>}
           <hr/>
           <h4>Gallery</h4>
           {show.images? (
