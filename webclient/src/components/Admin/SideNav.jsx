@@ -33,6 +33,15 @@ export default function SideNav() {
           Actors
           </Nav.Link>
         </Nav.Item>
+        <Nav.Item>
+          <Nav.Link 
+            as={Link} 
+            to="/admin/producers"
+            className="hoverable"
+          >
+          Producers
+          </Nav.Link>
+        </Nav.Item>
       </div>
       <p><Link to="/">Browse as user</Link></p>
     </Nav>
