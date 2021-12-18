@@ -65,17 +65,20 @@ export default function Edit(){
       setProducerName(producer.name);
       setProducerEmail(producer.email);
       setProducerWebsite(producer.website);
-      setShows(
-        producer.producedShows.map(produced=> {
-          let field = {
-            i:showsIndex,
-            show:produced.show._id,
-            producer:produced.producer,
-          };
-          setShowsIndex(showsIndex+1);
-          return field;
-        })
-      );
+      if(producer.producedShows) {
+        
+        setShows(
+          producer.producedShows.map(produced=> {
+            let field = {
+              i:showsIndex,
+              show:produced.show._id,
+              producer:produced.producer,
+            };
+            setShowsIndex(showsIndex+1);
+            return field;
+          })
+        );
+      }
       break;
     case "failed":
       dispatch(endLoad());

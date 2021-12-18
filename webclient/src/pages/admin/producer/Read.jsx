@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { Container, Button,Row, Col, Image  } from 'react-bootstrap';
+import { Container, Button,Row, Col, Image, ListGroup  } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import {useDispatch, useSelector} from 'react-redux';
 import { useParams, useNavigate, Link} from 'react-router-dom';
@@ -70,6 +70,19 @@ export default function Read(){
       <h6><Link to="/admin/producers">List</Link></h6>
       <p>Email: {producer?.email || "N/A"}</p>
       <p>Website: {producer?.website || "N/A"}</p>
+      <p>Produced Shows</p>
+      
+      {producer?.producedShows&& (
+        <ListGroup>
+          {producer.producedShows.map(produced=> (
+            <ListGroup.Item key={produced._id}>
+              <Link to={`/admin/shows/${produced.show._id}`}>
+                {produced.show.title}
+              </Link>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      ) || <p>No produced shows</p>}
       {producer?.images?.length > 0&& (
         <>
           <h4>Gallery</h4>
