@@ -9,7 +9,7 @@ router.use("/admin", requireAdminMiddleware());
 const {
   list,
   create,
-  // read,
+  read,
   // update,
   // destroy
 } = require("../controllers/admin/producerController");
@@ -18,9 +18,9 @@ router.route('/admin/producers')
   .get(list)
   .post(create);
 
-// router.route('/admin/producers/:id')
-//   .get(read)
+router.route('/admin/producers/:id')
+  .get(read)
 //   .delete(destroy)
-//   .patch(update);
+// .patch(update);
 
 module.exports = router;

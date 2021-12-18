@@ -34,7 +34,7 @@ const producersSlice = createSlice({
         state.producers = action.payload.producers;
       })
       .addCase(load.rejected, (state) =>  {
-        state.loadStatus = "failed ";
+        state.loadStatus = "failed";
       });
   }
 });

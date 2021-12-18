@@ -11,6 +11,16 @@ producerController.list = async (req, res, next) => {
   })
 }
 
+producerController.read = async (req, res, next) => {
+  let { id } = req.params;
+  producer.findById(id, function (err, data) {
+    if (err) return next(err);
+    // TODO: add film producers logic
+
+    res.status(200).send({ producer: data });
+  })
+}
+
 producerController.create = async (req, res, next) => {
   let imgPaths = [];
   let fields = req.body;

@@ -8,6 +8,13 @@ export const create = createAsyncThunk(
   }
 );
 
+export const load = createAsyncThunk( 
+  'admin/producer/load', async(id) => {
+    let response = await axios.get('/api/admin/producers/'+id);
+    return response.data;
+  }
+);
+
 const producerSlice = createSlice({
   name:'admin/producer',
   initialState: {
@@ -39,7 +46,19 @@ const producerSlice = createSlice({
       .addCase(create.rejected, (state, action) => {
         state.createStatus="failed";
         console.debug('reject payload:', action.error);
-      });
+      })
+      .addCase(load.pending, (state)=> {
+        state.loadStatus="pending";
+      })
+      .addCase(load.fulfilled, (state,action) => {
+        state.loadStatus= "success";
+        state.producer = action.payload.producer;
+      })
+      .addCase(load.rejected, (state, action) => {
+        state.loadStatus="failed";
+        console.debug('reject payload:', action.error);
+      })
+    ;
   }
 });
 

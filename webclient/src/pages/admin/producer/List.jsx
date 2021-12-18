@@ -43,8 +43,10 @@ export default function List() {
       dispatch(endLoad());
       alert.error('Failed loading producers');
       navigate('/admin');
+      break;
     }
   }, [loadStatus]);
+
   /* component render  */
   return <>
     <Helmet>
@@ -71,7 +73,11 @@ export default function List() {
             <tbody>
               {producers.map(producer=>(
                 <tr key={producer._id}>
-                  <td>{producer.name}</td>
+                  <td>
+                    <Link to={`/admin/producers/${producer._id}`}>
+                      {producer.name}
+                    </Link>
+                  </td>
                   <td>{producer.email || "N/A"}</td>
                   <td>{producer.website || "N/A"}</td>
                   <td></td>

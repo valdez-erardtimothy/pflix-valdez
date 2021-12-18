@@ -19,7 +19,7 @@ import EditActor from './pages/admin/actor/Edit';
 
 import ProducerList from './pages/admin/producer/List.jsx';
 import CreateProducer from './pages/admin/producer/Create.jsx';
-// import ReadProducer from './pages/admin/actor/Read';
+import ReadProducer from './pages/admin/producer/Read.jsx';
 // import EditProducer from './pages/admin/actor/Edit';
 
 import Dashboard from './pages/admin/Dashboard.jsx';
@@ -66,10 +66,10 @@ const routes = () => {
         <Route path="producers">
           <Route index element={<ProducerList/>}/>
           <Route path="create" element={<CreateProducer/>}/>
-          {/* <Route path=":id">
-            <Route index element={<ReadActor/>}/>
-            <Route path="edit" element={<EditActor/>}/>
-          </Route> */}
+          <Route path=":id">
+            <Route index element={<ReadProducer/>}/>
+            {/* <Route path="edit" element={<EditProducer/>}/> */}
+          </Route>
         </Route>
       </Route>
     </Route>
