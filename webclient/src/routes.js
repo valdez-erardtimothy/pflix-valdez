@@ -17,6 +17,11 @@ import CreateActor from './pages/admin/actor/Create.jsx';
 import ReadActor from './pages/admin/actor/Read';
 import EditActor from './pages/admin/actor/Edit';
 
+import ProducerList from './pages/admin/producer/List.jsx';
+import CreateProducer from './pages/admin/producer/Create.jsx';
+import ReadProducer from './pages/admin/producer/Read.jsx';
+import EditProducer from './pages/admin/producer/Edit';
+
 import Dashboard from './pages/admin/Dashboard.jsx';
 // layout imports
 import AdminLayout from './layouts/Admin.jsx';
@@ -56,6 +61,14 @@ const routes = () => {
           <Route path=":id">
             <Route index element={<ReadActor/>}/>
             <Route path="edit" element={<EditActor/>}/>
+          </Route>
+        </Route>
+        <Route path="producers">
+          <Route index element={<ProducerList/>}/>
+          <Route path="create" element={<CreateProducer/>}/>
+          <Route path=":id">
+            <Route index element={<ReadProducer/>}/>
+            <Route path="edit" element={<EditProducer/>}/>
           </Route>
         </Route>
       </Route>
