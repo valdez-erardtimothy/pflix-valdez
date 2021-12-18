@@ -16,6 +16,10 @@ const producerSchema = Schema({
     type: String,
     required: false
   },
+  images: [{
+    type: String,
+    required: false
+  }]
 })
 
 module.exports = model('Producer', producerSchema);

@@ -87,6 +87,7 @@ const producerSlice = createSlice({
 export const {
   clearLoadStatus,
   clearLoaded,
-  clearCreateStatus
+  clearCreateStatus,
+  clearEditStatus
 } = producerSlice.actions;
 export default producerSlice.reducer;

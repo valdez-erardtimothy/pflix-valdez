@@ -1,5 +1,7 @@
+const showProducer = require("../../models/showProducer");
 const producer = require("../../models/producer");
-const { saveUpload } = require("../../utils/assetHandler");
+const { saveUpload, removeUploaded } = require("../../utils/assetHandler");
+const removeDuplicate = require('../../utils/removeDuplicate');
 
 const producerController = {};
 producerController.list = async (req, res, next) => {
@@ -13,10 +15,10 @@ producerController.list = async (req, res, next) => {
 
 producerController.read = async (req, res, next) => {
   let { id } = req.params;
-  producer.findById(id, function (err, data) {
+  producer.findById(id, async function (err, data) {
     if (err) return next(err);
-    // TODO: add film producers logic
-
+    data = data.toObject();
+    data.producedShows = await showProducer.find({ producer: id }).populate('show').exec();
     res.status(200).send({ producer: data });
   })
 }
@@ -45,6 +47,24 @@ producerController.update = async (req, res, next) => {
   let fields = req.body;
   let uploads = req.files?.images;
   let { id } = req.params;
+  let showProducerData = []
+  if (fields['shows[]']) {
+    if (!Array.isArray(fields['shows[]'])) {
+      showProducerData.push({
+        show: fields['shows[]'],
+        producer: fields['producers[]']
+      });
+    } else {
+      for (let i = 0; i < fields['shows[]'].length; i++) {
+        showProducerData.push({
+          show: fields['shows[]'][i],
+          producer: fields['producers[]'][i]
+        });
+      }
+    }
+  }
+  showProducerData = removeDuplicate(showProducerData, 'show');
+
   producer.findById(id, async function (loadErr, data) {
     if (loadErr) {
       return next(loadErr);
@@ -53,9 +73,9 @@ producerController.update = async (req, res, next) => {
     // handle uploads
     if (uploads !== undefined) {
       // delete existing pics
-      if (existingActor?.images?.length > 0) {
+      if (data?.images?.length > 0) {
         await Promise.all(
-          existingActor.images.map(
+          data.images.map(
             async (url) => { await removeUploaded(url); }
           )
         );
@@ -73,6 +93,8 @@ producerController.update = async (req, res, next) => {
     data.overwrite(fields);
     try {
       const updated = await data.save();
+      await showProducer.deleteMany({ producer: id });
+      await showProducer.insertMany(showProducerData);
       return res.status(200).send({ producer: updated })
     } catch (updateError) {
       return next(updateError);

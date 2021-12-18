@@ -1,12 +1,13 @@
 import React, {useEffect} from 'react';
-import { Container, Button } from 'react-bootstrap';
+import { Container, Button,Row, Col, Image  } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import {useDispatch, useSelector} from 'react-redux';
-import { useParams, useNavigate, Link } from 'react-router-dom';
+import { useParams, useNavigate, Link} from 'react-router-dom';
 import {startLoad, endLoad} from '../../../features/loadingSlice';
 import {
   clearLoadStatus,
   clearLoaded,
+  clearEditStatus,
   load
 } from '../../../features/admin/producerSlice';
 import { useAlert } from 'react-alert';
@@ -42,11 +43,13 @@ export default function Read(){
       break;
     case "success":
       dispatch(endLoad());
+      dispatch(clearEditStatus());
       break;
     case "failed":
       dispatch(endLoad());
       alert.error("Error in loading Producer data from API.");
       navigate('/admin/producers');
+      dispatch(clearEditStatus());
       alert;
     }
   }, [loadStatus]);
@@ -59,7 +62,7 @@ export default function Read(){
       <h1>{producer?.name || "Producer"}
         <Button 
           as={Link} 
-          to={`/admin/producers/${producer?._id}`}
+          to={`/admin/producers/${producer?._id}/edit`}
           size="sm"
         >
                     Edit
@@ -67,6 +70,18 @@ export default function Read(){
       <h6><Link to="/admin/producers">List</Link></h6>
       <p>Email: {producer?.email || "N/A"}</p>
       <p>Website: {producer?.website || "N/A"}</p>
+      {producer?.images?.length > 0&& (
+        <>
+          <h4>Gallery</h4>
+          <Row>
+            {producer?.images.map(img=> (
+              <Col xs="12" sm="4" lg="3" className="p-2" key={img}>
+                <Image  src={img} fluid max-height="600px"/>
+              </Col>
+            ))}
+          </Row>
+        </>
+      )}
     </Container>
   </>;
 }
