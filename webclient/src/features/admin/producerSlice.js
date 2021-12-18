@@ -50,6 +50,9 @@ const producerSlice = createSlice({
     },
     clearEditStatus: (state) => {
       state.editStatus = "idle";
+    },
+    clearDeleteStatus: (state) => {
+      state.deleteStatus = "idle";
     }
   },
   extraReducers: builder=> {
@@ -106,6 +109,7 @@ export const {
   clearLoadStatus,
   clearLoaded,
   clearCreateStatus,
-  clearEditStatus
+  clearEditStatus,
+  clearDeleteStatus
 } = producerSlice.actions;
 export default producerSlice.reducer;

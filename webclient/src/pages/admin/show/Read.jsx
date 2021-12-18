@@ -122,6 +122,19 @@ export default function Read() {
               </ListGroup.Item>
             ))}
           </ListGroup>|| <p>no cast</p>}
+
+          <h4>Producers</h4>
+          {show?.producers && <ListGroup>
+            {show.producers.map(producer=>(<ListGroup.Item as={Link}
+              key={producer._id}
+              to={`/admin/producers/${producer.producer._id}`}
+              action
+            >
+              {producer.producer.name}
+            </ListGroup.Item>))}
+          </ListGroup>
+            || <p>No Producers</p>
+          }
           <hr/>
           <h4>Gallery</h4>
           {show.images? (

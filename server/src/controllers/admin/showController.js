@@ -1,5 +1,6 @@
 const filmography = require('../../models/filmography.js');
 const show = require('../../models/show.js');
+const showProducer = require('../../models/showProducer.js');
 const { saveUpload } = require('../../utils/assetHandler');
 const showController = {};
 
@@ -17,6 +18,9 @@ showController.read = async (req, res) => {
     data = data.toObject();
     data.cast = await filmography.find({ show: data._id })
       .populate('actor')
+      .exec();
+    data.producers = await showProducer.find({ show: data._id })
+      .populate('producer')
       .exec();
     return res.status(200).send({ show: data });
   });

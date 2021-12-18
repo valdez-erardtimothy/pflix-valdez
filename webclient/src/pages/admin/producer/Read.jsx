@@ -12,7 +12,7 @@ import {
   deleteProducer,
 } from '../../../features/admin/producerSlice';
 import { useAlert } from 'react-alert';
-import { clearDeleteStatus } from '../../../features/admin/actorSlice';
+import { clearDeleteStatus } from '../../../features/admin/producerSlice';
 export default function Read(){
   /* hooks */
   const dispatch = useDispatch();
@@ -26,7 +26,6 @@ export default function Read(){
     loadStatus,
     deleteStatus
   } = useSelector(state=>state.admin.producer);
-  /* render */
 
   /* effects */
   // load producer on page visit
@@ -53,13 +52,11 @@ export default function Read(){
       alert.error("Error in loading Producer data from API.");
       navigate('/admin/producers');
       dispatch(clearEditStatus());
-      alert;
     }
   }, [loadStatus]);
 
   useEffect(()=>{
     switch(deleteStatus) {
-      
     case "success":
       alert.success('Deleted Producer!');
       dispatch(clearDeleteStatus());
@@ -72,6 +69,7 @@ export default function Read(){
     }
   }, [deleteStatus]);
   
+  /* render */
   return <>
     <Helmet>
       <title>{producer?.name || "Producer"}</title>
