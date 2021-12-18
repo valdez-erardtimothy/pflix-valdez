@@ -22,6 +22,12 @@ export const edit = createAsyncThunk(
   }
 );
 
+export const deleteProducer = createAsyncThunk(
+  'admin/producer/delete', async(id) => {
+    return await axios.delete ('/api/admin/producers/'+id);
+  }
+);
+
 const producerSlice = createSlice({
   name:'admin/producer',
   initialState: {
@@ -29,7 +35,8 @@ const producerSlice = createSlice({
     deleted: null,
     loadStatus: "idle",
     createStatus: "idle",
-    editStatus: "idle"
+    editStatus: "idle",
+    deleteStatus: "idle"
   },
   reducers: {
     clearLoadStatus: (state)=> {
@@ -78,6 +85,17 @@ const producerSlice = createSlice({
       })
       .addCase(edit.rejected, (state, action) => {
         state.editStatus="failed";
+        console.debug('reject error:', action.error);
+      })
+      .addCase(deleteProducer.pending, (state)=> {
+        state.deleteStatus="pending";
+      })
+      .addCase(deleteProducer.fulfilled, (state,action) => {
+        state.deleteStatus= "success";
+        state.producer = action.payload.producer;
+      })
+      .addCase(deleteProducer.rejected, (state, action) => {
+        state.deleteStatus="failed";
         console.debug('reject error:', action.error);
       })
     ;

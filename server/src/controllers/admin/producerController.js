@@ -102,5 +102,15 @@ producerController.update = async (req, res, next) => {
   });
 }
 
+producerController.destroy = async (req, res, next) => {
+  let { id } = req.params
+  producer.findOneAndDelete({ _id: id }, async function (err, data) {
+    if (err) {
+      return next(err);
+    }
+    await showProducer.deleteMany({ producer: data._id })
+    res.status(200).send({ producer: data })
+  })
+}
 
 module.exports = producerController;
