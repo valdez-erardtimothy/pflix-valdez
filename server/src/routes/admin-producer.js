@@ -10,7 +10,7 @@ const {
   list,
   create,
   read,
-  // update,
+  update,
   // destroy
 } = require("../controllers/admin/producerController");
 
@@ -20,7 +20,7 @@ router.route('/admin/producers')
 
 router.route('/admin/producers/:id')
   .get(read)
-//   .delete(destroy)
-// .patch(update);
+  //   .delete(destroy)
+  .patch(update);
 
 module.exports = router;

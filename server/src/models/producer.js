@@ -13,7 +13,7 @@ const producerSchema = Schema({
     required: false
   },
   website: {
-    tyoe: String,
+    type: String,
     required: false
   },
 })

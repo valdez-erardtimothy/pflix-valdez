@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { Container } from 'react-bootstrap';
+import { Container, Button } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import {useDispatch, useSelector} from 'react-redux';
 import { useParams, useNavigate, Link } from 'react-router-dom';
@@ -56,7 +56,14 @@ export default function Read(){
       <title>{producer?.name || "Producer"}</title>
     </Helmet> 
     <Container as="main" fluid>
-      <h1>{producer?.name || "Producer"}</h1>
+      <h1>{producer?.name || "Producer"}
+        <Button 
+          as={Link} 
+          to={`/admin/producers/${producer?._id}`}
+          size="sm"
+        >
+                    Edit
+        </Button></h1>
       <h6><Link to="/admin/producers">List</Link></h6>
       <p>Email: {producer?.email || "N/A"}</p>
       <p>Website: {producer?.website || "N/A"}</p>

@@ -1,5 +1,5 @@
 import React, {useEffect} from 'react';
-import { Container, Table } from 'react-bootstrap';
+import { Button, Container, Table } from 'react-bootstrap';
 import { Helmet } from 'react-helmet-async';
 import { Link, useNavigate } from 'react-router-dom';
 import {useSelector, useDispatch} from 'react-redux';
@@ -80,7 +80,16 @@ export default function List() {
                   </td>
                   <td>{producer.email || "N/A"}</td>
                   <td>{producer.website || "N/A"}</td>
-                  <td></td>
+                  <td>
+                    <Button 
+                      as={Link} 
+                      to={`/admin/producers/${producer._id}/edit`}
+                      size="sm"
+                      className="material-icons"
+                    >
+                    edit
+                    </Button>
+                  </td>
                 </tr>
               ))}
             </tbody>

@@ -15,6 +15,13 @@ export const load = createAsyncThunk(
   }
 );
 
+export const edit = createAsyncThunk( 
+  'admin/producer/edit', async({id, formData}) => {
+    let response = await axios.patch('/api/admin/producers/'+id, formData);
+    return response.data;
+  }
+);
+
 const producerSlice = createSlice({
   name:'admin/producer',
   initialState: {
@@ -22,6 +29,7 @@ const producerSlice = createSlice({
     deleted: null,
     loadStatus: "idle",
     createStatus: "idle",
+    editStatus: "idle"
   },
   reducers: {
     clearLoadStatus: (state)=> {
@@ -32,6 +40,9 @@ const producerSlice = createSlice({
     },
     clearCreateStatus: (state) => {
       state.createStatus = "idle";
+    },
+    clearEditStatus: (state) => {
+      state.editStatus = "idle";
     }
   },
   extraReducers: builder=> {
@@ -57,6 +68,17 @@ const producerSlice = createSlice({
       .addCase(load.rejected, (state, action) => {
         state.loadStatus="failed";
         console.debug('reject payload:', action.error);
+      })
+      .addCase(edit.pending, (state)=> {
+        state.editStatus="pending";
+      })
+      .addCase(edit.fulfilled, (state,action) => {
+        state.editStatus= "success";
+        state.producer = action.payload.producer;
+      })
+      .addCase(edit.rejected, (state, action) => {
+        state.editStatus="failed";
+        console.debug('reject error:', action.error);
       })
     ;
   }
