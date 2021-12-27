@@ -19,11 +19,14 @@ export default function SearchPage(){
   
   /* hook-fetched vars */
   const currentKeyword = searchParams.get('keyword');
+  const currentEntity = searchParams.get('entity');
 
   /* effects */
+
+  // search "event" handler
   useEffect(()=>{
     dispatch(search(location.search));
-  }, [currentKeyword]);
+  }, [currentKeyword, currentEntity]);
   
   /* render */
   return <>
