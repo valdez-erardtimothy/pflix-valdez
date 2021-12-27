@@ -2,9 +2,11 @@ import React from 'react';
 import MainLayout from './layouts/Main';
 import {Route} from 'react-router-dom';
 
+
 import Home from './pages/Home.jsx';
 import LoginPage from './pages/auth/Login.jsx';
 import RegisterPage from './pages/auth/Register.jsx';
+import SearchShow from './pages/SearchPage.jsx';
 
 // admin page imports
 import ShowList from './pages/admin/show/List.jsx';
@@ -43,6 +45,7 @@ const routes = () => {
       </Route>
       <Route path="register" element={<RegisterPage/>}/>
       <Route path="register/success" element={<RegisterSuccess/>}/>
+      <Route path="search" element={<SearchShow/>}/>
     </Route>
     <Route path="/admin" element={<AdminRoute/>}>
       <Route element={<AdminLayout/>}>
