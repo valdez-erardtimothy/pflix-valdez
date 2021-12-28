@@ -1,14 +1,17 @@
 /* package imports */
-import React, {useEffect} from 'react';
-import { useLocation, useSearchParams } from 'react-router-dom';
-import { useDispatch } from 'react-redux';
+import React, {useState, useEffect} from 'react';
+import { useLocation, useSearchParams,  } from 'react-router-dom';
+import { useDispatch, useSelector } from 'react-redux';
+import { useAlert } from 'react-alert';
+import { Placeholder } from 'react-bootstrap';
 
 /* actions */
-
 import { search } from '../features/searchSlice';
+
 /* component imports */
 import SearchShow from '../components/SearchBox';
 import '../css/search-page.css';
+import ShowList from '../components/user_side/ShowList';
 
 
 export default function SearchPage(){
@@ -16,18 +19,36 @@ export default function SearchPage(){
   const [searchParams] = useSearchParams();
   const location = useLocation();
   const dispatch = useDispatch(); 
+  const alert = useAlert();
   
   /* hook-fetched vars */
   const currentKeyword = searchParams.get('keyword');
   const currentEntity = searchParams.get('entity');
 
-  /* effects */
+  /* redux states */
+  const {
+    searched, 
+    searchStatus
+  } = useSelector(state=>state.search);
 
+  /* local vars */
+  let [searchLoaded, setSearchLoaded] = useState(true);
+
+  /* effects */
   // search "event" handler
   useEffect(()=>{
     dispatch(search(location.search));
   }, [currentKeyword, currentEntity]);
-  
+
+  // search status checker
+  useEffect(()=> {
+    // ensure boolean
+    setSearchLoaded( searchStatus !== "loading" ); 
+    if(searchStatus === "failed") {
+      alert.error("failed in Searching");
+    }
+  }, [searchStatus]);
+  console.debug('searched: ', searched);
   /* render */
   return <>
     <div className="mb-5">
@@ -39,7 +60,9 @@ export default function SearchPage(){
       </aside>
       <main>
         <h4>Search: {currentKeyword || "n/a"}</h4>
-        <div></div>
+        {searchLoaded ?( 
+          currentEntity === "show" && <ShowList shows={searched}/> 
+        ):<Placeholder/>}
       </main>
     </div>
     
