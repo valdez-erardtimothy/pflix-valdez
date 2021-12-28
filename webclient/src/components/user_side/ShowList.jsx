@@ -1,18 +1,18 @@
 import React, {useEffect} from 'react';
-import { Col, Image, Row, Stack } from 'react-bootstrap';
+import {  Image, Stack } from 'react-bootstrap';
 
 export default function ShowList({shows}) {
   useEffect(()=>{console.debug('Show List!', shows);}, []);
   /* render */
   return <>
-    <Stack gap={4}>
+    <Stack gap={4} >
       {shows?.length>0 && shows.map(show=>{
         // show component
-        return <Row 
-          className='bg-dark text-light py-3 me-4' 
+        return <Stack direction="horizontal"
+          className='bg-dark text-light p-3 me-4 align-items-start' 
           key={show._id}
         >
-          <Col
+          <div
           
             xs={12}
             sm={6}
@@ -20,9 +20,9 @@ export default function ShowList({shows}) {
             <Image fluid
               style={{maxHeight:"300px"}}
               src={show?.images[0] ?? "/img/movie_placeholder.png"}/>
-          </Col>  
-          <Col
-          
+          </div>  
+          <div
+            className="ms-2"
             xs={12}
             sm={6}
             lg={9}>
@@ -31,8 +31,8 @@ export default function ShowList({shows}) {
                 {show.showType}
               </small>
             </h3>
-          </Col>         
-        </Row>;
+          </div>         
+        </Stack>;
 
       })}
     </Stack> 
