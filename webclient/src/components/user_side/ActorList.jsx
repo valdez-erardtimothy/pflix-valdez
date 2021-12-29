@@ -12,20 +12,13 @@ export default function ActorList({actors}) {
           className='bg-dark text-light p-3 me-4 align-items-start' 
           key={actor._id}
         >
-          <div
-          
-            xs={12}
-            sm={6}
-            lg={3}>
+          <div>
             <Image fluid
               style={{maxHeight:"300px"}}
               src={actor?.images[0] ?? "/img/movie_placeholder.png"}/>
           </div>  
           <div
-            className="ms-2"
-            xs={12}
-            sm={6}
-            lg={9}>
+            className="ms-2">
             <h3>{actor.name}&nbsp;
             </h3>
             {actor?.notes && (<p>{actor.notes}</p>)}
