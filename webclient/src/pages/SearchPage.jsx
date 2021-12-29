@@ -12,6 +12,7 @@ import { search } from '../features/searchSlice';
 import SearchShow from '../components/SearchBox';
 import '../css/search-page.css';
 import ShowList from '../components/user_side/ShowList';
+import ActorList from '../components/user_side/ActorList';
 
 
 export default function SearchPage(){
@@ -48,7 +49,6 @@ export default function SearchPage(){
       alert.error("failed in Searching");
     }
   }, [searchStatus]);
-  console.debug('searched: ', searched);
   /* render */
   return <>
     <div className="mb-5">
@@ -60,8 +60,10 @@ export default function SearchPage(){
       </aside>
       <main>
         <h4>Search: {currentKeyword || "n/a"}</h4>
-        {searchLoaded ?( 
-          currentEntity === "show" && <ShowList shows={searched}/> 
+        {searchLoaded ?(<>
+          {currentEntity === "show" && <ShowList shows={searched}/>} 
+          {currentEntity === "actor" && <ActorList actors={searched}/>}
+        </> 
         ):<Placeholder/>}
       </main>
     </div>

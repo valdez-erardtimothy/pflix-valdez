@@ -1,15 +1,16 @@
-import React, {useEffect} from 'react';
+import React from 'react';
 import {  Image, Stack } from 'react-bootstrap';
 
-export default function ShowList({shows}) {
+export default function ActorList({actors}) {
+
   /* render */
   return <>
     <Stack gap={4} >
-      {shows?.length>0 && shows.map(show=>{
+      {actors?.length>0 && actors.map(actor=>{
         // show component
         return <Stack direction="horizontal"
           className='bg-dark text-light p-3 me-4 align-items-start' 
-          key={show._id}
+          key={actor._id}
         >
           <div
           
@@ -18,19 +19,15 @@ export default function ShowList({shows}) {
             lg={3}>
             <Image fluid
               style={{maxHeight:"300px"}}
-              src={show?.images[0] ?? "/img/movie_placeholder.png"}/>
+              src={actor?.images[0] ?? "/img/movie_placeholder.png"}/>
           </div>  
           <div
             className="ms-2"
             xs={12}
             sm={6}
             lg={9}>
-            <h3>{show.title}&nbsp; 
-              <small className="text-muted">
-                {show.showType}
-              </small>
+            <h3>{actor.name}&nbsp;
             </h3>
-            <p>{show.runtime_minutes}</p>
           </div>         
         </Stack>;
 
