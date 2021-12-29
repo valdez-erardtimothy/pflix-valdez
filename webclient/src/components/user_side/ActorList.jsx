@@ -28,6 +28,7 @@ export default function ActorList({actors}) {
             lg={9}>
             <h3>{actor.name}&nbsp;
             </h3>
+            {actor?.notes && (<p>{actor.notes}</p>)}
           </div>         
         </Stack>;
 
