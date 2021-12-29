@@ -1,5 +1,5 @@
 let path = require('path');
-let fsPromises = require('fs/promises');
+let fs = require('fs');
 let helpers = {}
 
 let assetPath = process.env.ASSET_PATH;
@@ -21,6 +21,35 @@ helpers.saveUpload = async (file, urlPath) => {
   })
 }
 
+helpers.savefromURL = async (imageURL, newUrlPath, imageName) => {
+  const writer = createWriteStream(
+    path.resolve(assetPath, newUrlPath, fileName)
+  );
+
+  return Axios({
+    method: 'get',
+    url: imageURL,
+    responseType: 'stream',
+  }).then(response => {
+
+
+    return new Promise((resolve, reject) => {
+      response.data.pipe(writer);
+      let error = null;
+      writer.on('error', err => {
+        error = err;
+        writer.close();
+        reject(err);
+      });
+      writer.on('close', () => {
+        if (!error) {
+          resolve(`${assetBaseUrl}/${newUrlPath}/${imageName}`);
+        }
+      });
+    });
+  });
+}
+
 /**
  * 
  * @param {*} urlPath includes filename already 
@@ -36,6 +65,8 @@ helpers.removeUploaded = async (urlPath) => {
   console.debug("unlink path:", `${assetPath}/${strippedUrl}`)
   return fsPromises.unlink(`${assetPath}/${strippedUrl}`)
 }
+
+
 
 
 module.exports = helpers;

@@ -1,0 +1,14 @@
+#search-content {
+    display:flex;
+    flex-direction: row;
+    min-height: 100vh;
+    gap: 1.25rem;
+}
+
+#search-content aside {
+    flex-grow: 1;
+}
+
+#search-content main {
+    flex-grow: 3;
+}

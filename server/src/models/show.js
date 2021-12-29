@@ -26,7 +26,11 @@ const showSchema = Schema({
   images: [{
     type: String,
     required: false,
-  }]
+  }],
+  genre: {
+    type: String,
+    required: false
+  }
 }, { timestamps: true });
 
 module.exports = model('Show', showSchema);

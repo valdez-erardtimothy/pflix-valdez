@@ -1,24 +1,18 @@
 import React from 'react';
-import {Button} from 'react-bootstrap';
-import {useAlert} from 'react-alert';
-function App() {
-  let alert = useAlert();
+import { Container } from 'react-bootstrap';
+/* component imports */
+import SearchBox from '../components/SearchBox';
 
+/* component */
+function Home() {
   return (
-    <div className="App container-fluid">
+    <Container fluid className="p-0"> 
       <header className="App-header">
-        <p>
-          Edit <code>src/App.jsx</code> and save to reload.
-        </p>
-        <Button 
-          variant="dark" 
-          className="shadow"
-          onClick={()=>{alert.show('alert boi');}}
-        >I&apos;m a bootstrap button
-        </Button>
+        <h1>Welcome to Pflix</h1>
       </header>
-    </div>
+      <SearchBox redirectToSearchPage/>
+    </Container>
   );
 }
 
-export default App;
+export default Home;
