@@ -11,7 +11,6 @@ showController.get = async (req, res, next) => {
       if (err) {
         return next(err);
       }
-
       // transforms
       show = show.toObject();
       if (user) {
