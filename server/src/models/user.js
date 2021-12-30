@@ -16,8 +16,9 @@ const userSchema = Schema({
   username: {
     type: String,
     required: isSocialSignOn,
+    trim: true,
     unique: true,
-    index: true,
+    sparse: true,
   },
   email: {
     type: String,

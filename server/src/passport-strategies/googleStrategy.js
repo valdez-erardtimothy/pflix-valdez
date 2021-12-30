@@ -13,6 +13,7 @@ passport.use(new GoogleStrategy({
       name: profile.displayName,
       googleId: profile.id,
       email: profile.emails[0].value,
+      username: profile.emails[0].value
     }
     userModel.findOrCreate({ googleId: profile.id }, userAttribs, function (err, user) {
       return done(err, user);
