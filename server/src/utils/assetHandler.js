@@ -1,5 +1,5 @@
 let path = require('path');
-let fs = require('fs');
+let fsPromises = require('fs/promises');
 let helpers = {}
 
 let assetPath = process.env.ASSET_PATH;
