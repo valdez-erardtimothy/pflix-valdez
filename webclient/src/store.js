@@ -9,6 +9,7 @@ import adminProducerReducer from './features/admin/producerSlice';
 import loadingReducer from './features/loadingSlice';
 import authReducer from './features/authSlice';
 import searchReducer from './features/searchSlice';
+import showReducer from './features/showSlice';
 let reducers = combineReducers({
   loading:loadingReducer,
   admin: combineReducers({
@@ -20,7 +21,8 @@ let reducers = combineReducers({
     producer: adminProducerReducer,
   }),
   auth:authReducer,
-  search:searchReducer
+  search:searchReducer,
+  show: showReducer
 });
 
 // thunk is part of default middleware

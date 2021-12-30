@@ -1,7 +1,6 @@
 const { Schema, model } = require('mongoose');
 const [intSchemaTypes] = require('../utils/propertySchemaTypes.js');
 
-
 const showSchema = Schema({
   title: {
     type: String,
@@ -30,6 +29,34 @@ const showSchema = Schema({
   genre: {
     type: String,
     required: false
+  },
+  reviews: [
+    {
+      user: {
+        type: Schema.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      rating: {
+        ...intSchemaTypes,
+        min: 1,
+        max: 5
+      },
+      comment: {
+        type: String,
+        required: false,
+      }
+    }
+  ],
+  ratings: {
+    type: Number,
+    required: false,
+    min: 1,
+    max: 5
+  },
+  reviewCount: {
+    ...intSchemaTypes,
+    default: 0
   }
 }, { timestamps: true });
 
