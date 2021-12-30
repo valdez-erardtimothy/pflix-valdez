@@ -6,7 +6,7 @@ export default function ShowJumbotron({show}) {
   >
     <div>
       <Image 
-        style={{height:"300px"}}
+        style={{height:"300px", width:"200px", objectFit:"cover"}}
         src={show?.images[0] ?? "/img/movie_placeholder.png"}/>
     </div>  
     <div

@@ -13,8 +13,8 @@ export default function ActorList({actors}) {
           key={actor._id}
         >
           <div>
-            <Image fluid
-              style={{maxHeight:"300px"}}
+            <Image 
+              style={{height:"300px", width:"200px", objectFit:"cover"}}
               src={actor?.images[0] ?? "/img/movie_placeholder.png"}/>
           </div>  
           <div
