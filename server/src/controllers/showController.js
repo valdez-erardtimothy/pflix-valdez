@@ -4,9 +4,18 @@ let showController = {};
 
 showController.get = async (req, res, next) => {
   let { id } = req.params;
+  let { user } = res.locals
   showModel.findById(id, function (err, show) {
     if (err) {
       return next(err);
+    }
+
+    // transforms
+    show = show.toObject();
+    if (user) {
+      show.reviewOfAuthenticated = show.reviews.find(
+        review => review.user.toString() === user._id.toString()
+      );
     }
     res.status(200).send({ show });
   });
