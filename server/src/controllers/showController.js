@@ -27,7 +27,6 @@ const getShow = function (id, user) {
             review => review.user._id.toString() === user._id.toString()
           );
         }
-        console.debug('show inside internal method: ', show);
         return resolve(show);
       });
   })
@@ -55,10 +54,7 @@ showController.review = async (req, res, next) => {
   let { id: showId } = req.params;
   try {
     let show = await showModel.findById(showId);
-    console.debug('show:', show)
-    console.debug('show reviews:', show.reviews);
     let reviewed = show.reviews.find(rev => rev.user.toString() === user._id.toString());
-    console.debug('reviewed:', reviewed);
     if (reviewed) {
       show.reviews.forEach(rev => {
         if (rev.user.toString() === user._id.toString()) {
