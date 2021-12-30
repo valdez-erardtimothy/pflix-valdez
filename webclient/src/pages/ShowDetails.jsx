@@ -21,7 +21,7 @@ export default function ShowDetails() {
   let { showId } = useParams();
 
   /* redux states */
-  const {loaded, loadStatus} = useSelector(state=>state.show); 
+  const {loaded: show, loadStatus} = useSelector(state=>state.show); 
   const {authenticated} = useSelector(state=>state.auth);
 
   /* effects  */
@@ -48,48 +48,61 @@ export default function ShowDetails() {
   const reviewSubmitHandler = async(e) => {
     e.preventDefault();
     dispatch(review({
-      showId: loaded._id,
+      showId: show._id,
       formData: new FormData(e.target)
     }));
   };
 
   /* render */
   return <>
-    {loaded && (
+    {show && (
       <>
-        <ShowJumbotron show={loaded}/>
+        <ShowJumbotron show={show}/>
         <h4>Reviews</h4>
         {authenticated ? <> 
           <div className="border p-2">
-            <h5>Review now!</h5>
-            <Form onSubmit={reviewSubmitHandler}>
-              <FloatingLabel 
-                controlId="reviewRating"
-                label="Rating"
-                className="d-inline-block"
-              >
-                <Form.Select name="rating"
-                >
-                  {[...Array(5).keys()].map(val=>{
-                    val=val+1;
-                    return <option key={val} value={val}>{val.toString()}</option>;
-                  })}
-                </Form.Select>
-              </FloatingLabel>
-              <FloatingLabel
-                controlId="reviewComment"
-                label="Comment"
-                className="mb-2 "
-              >
-                <Form.Control 
-                  as="textarea"
-                  style={{height:"100px"}}
-                  name="comment"
-                  placeholder="foo"
-                />
-              </FloatingLabel>
-              <Button type="submit" variant="primary">Review</Button>
-            </Form>
+            {show.reviewOfAuthenticated?<>
+              <h5>Reviewed</h5>
+              <p>Your rating: {show.reviewOfAuthenticated.rating}
+                <span className="material-icons">
+                  grade
+                </span> of 5
+              </p>
+              <p>Comment: {show.reviewOfAuthenticated?.comment || "n/a"}</p>
+            </>:(
+              <>
+                <h5>Review now!</h5>
+                <Form onSubmit={reviewSubmitHandler}>
+                  <FloatingLabel 
+                    controlId="reviewRating"
+                    label="Rating"
+                    className="d-inline-block"
+                  >
+                    <Form.Select name="rating"
+                    >
+                      {[...Array(5).keys()].map(val=>{
+                        val=val+1;
+                        return <option key={val} value={val}>{val.toString()}</option>;
+                      })}
+                    </Form.Select>
+                  </FloatingLabel>
+                  <FloatingLabel
+                    controlId="reviewComment"
+                    label="Comment"
+                    className="mb-2 "
+                  >
+                    <Form.Control 
+                      as="textarea"
+                      style={{height:"100px"}}
+                      name="comment"
+                      placeholder="foo"
+                    />
+                  </FloatingLabel>
+                  <Button type="submit" variant="primary">Review</Button>
+                </Form>
+              </>
+            )}
+            
           </div>
         </> : <>
           <p className="text-muted">Please sign in to drop a review.</p> 
