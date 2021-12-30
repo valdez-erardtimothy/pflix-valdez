@@ -11,6 +11,8 @@ export default function ShowList({shows}) {
         return <Link
           key={show._id}
           to={`/shows/${show._id}`}
+          className='text-decoration-none'
+          title={`Go to show details page`}
         >
           <ShowJumbotron  show={show}/>
         </Link>;
