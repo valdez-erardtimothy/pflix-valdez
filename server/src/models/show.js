@@ -33,7 +33,7 @@ const showSchema = Schema({
   reviews: [
     {
       user: {
-        type: Schema.ObjectId,
+        type: Schema.Types.ObjectId,
         ref: 'User',
         required: true,
       },

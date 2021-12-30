@@ -5,7 +5,7 @@ const actorSchema = Schema({
   name: {
     type: String,
     trim: true,
-    required: [true, `please put the admins name.`],
+    required: [true, `please put the actor's name.`],
     index: true
   },
   notes: {
