@@ -15,7 +15,6 @@ router.route('/shows/:id')
   .get(get)
 
 router.route('/shows/:id/reviews')
-  .get()
   .post(requireAuthenticated(), review);
 
 module.exports = router;
