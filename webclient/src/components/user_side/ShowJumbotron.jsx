@@ -17,6 +17,12 @@ export default function ShowJumbotron({show}) {
           {show.showType}
         </small>
       </h3>
+      {show?.ratings ? <p>{show.ratings}
+        <span className="material-icons">grade</span> out of 5&nbsp;
+        <small className="text-muted">({show.reviewCount} reviews)</small>
+      </p> : (
+        <p>No Reviews</p>
+      )}
       <p>{show.genre}</p>
       <p>{show.runtimeMinutes} minutes</p>
       <p>{show.plot}</p>
