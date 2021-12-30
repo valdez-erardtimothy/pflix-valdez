@@ -8,13 +8,15 @@ router.use(loadAuthenticated());
 
 const {
   get,
-  review
+  review,
+  deleteReview
 } = require("../controllers/showController");
 
 router.route('/shows/:id')
   .get(get)
 
 router.route('/shows/:id/reviews')
-  .post(requireAuthenticated(), review);
+  .post(requireAuthenticated(), review)
+  .delete(requireAuthenticated(), deleteReview);
 
 module.exports = router;

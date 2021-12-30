@@ -6,10 +6,10 @@ import { useAlert } from 'react-alert';
 import {Button, Form, FloatingLabel} from 'react-bootstrap';
 /* component import */
 import ShowJumbotron from '../components/user_side/ShowJumbotron';
+import Review from '../components/user_side/Review';
 /* action import */
-import {load} from '../features/showSlice';
+import {clearDeleteReviewStatus, load, review, deleteReview, clearReviewStatus} from '../features/showSlice';
 import { startLoad,endLoad } from '../features/loadingSlice';
-import { review } from '../features/showSlice';
 
 export default function ShowDetails() {
   /* hooks */
@@ -21,7 +21,12 @@ export default function ShowDetails() {
   let { showId } = useParams();
 
   /* redux states */
-  const {loaded: show, loadStatus} = useSelector(state=>state.show); 
+  const {
+    loaded: show,
+    loadStatus,
+    deleteReviewStatus,
+    reviewStatus
+  } = useSelector(state=>state.show); 
   const {authenticated} = useSelector(state=>state.auth);
 
   /* effects  */
@@ -43,6 +48,32 @@ export default function ShowDetails() {
     }
   }, [loadStatus]);
 
+  // review submit status side effects
+  useEffect(()=> {
+    const isLoaded = reviewStatus !== "loading";
+    if(isLoaded) {
+      dispatch(clearReviewStatus());
+      dispatch(endLoad());
+    } else {dispatch(startLoad());}
+    if(reviewStatus === "failed") {
+      alert.error('Error in submitting review');
+      navigate('/');
+    }
+  }, [reviewStatus]);
+  
+  // review delete status side effects
+  useEffect(()=> {
+    const isLoaded = deleteReviewStatus !== "loading";
+    if(isLoaded) {
+      dispatch(clearDeleteReviewStatus());
+      dispatch(endLoad());
+    } else {dispatch(startLoad());}
+    if(deleteReviewStatus === "failed") {
+      alert.error('Error in deleteting review data');
+      navigate('/');
+    }
+  }, [deleteReviewStatus]);
+
 
   /* handlers */
   const reviewSubmitHandler = async(e) => {
@@ -58,11 +89,21 @@ export default function ShowDetails() {
     {show && (
       <>
         <ShowJumbotron show={show}/>
-        <h4>Reviews</h4>
+        <h4 className='mt-5 mb-2'>Reviews</h4>
+        {/* start of user review */}
         {authenticated ? <> 
-          <div className="border p-2">
+          <div className="border p-2 ms-2">
             {show.reviewOfAuthenticated?<>
-              <h5>Reviewed</h5>
+              <h5>Reviewed  &nbsp;
+                <Button 
+                  as="span" 
+                  className="material-icons"
+                  variant="danger"
+                  onClick={()=>dispatch(deleteReview({showId: show._id}))}
+                >
+                    delete
+                </Button>
+              </h5>
               <p>Your rating: {show.reviewOfAuthenticated.rating}
                 <span className="material-icons">
                   grade
@@ -108,6 +149,12 @@ export default function ShowDetails() {
           <p className="text-muted">Please sign in to drop a review.</p> 
         </>
         }
+        {/* end of user review */}
+        {show.reviews && show.reviews.map(review=>(
+          <div key={review.user._id} className="mb-2">
+            <Review review={review}/>
+          </div>
+        ))}
       </>
     )}
   </>;

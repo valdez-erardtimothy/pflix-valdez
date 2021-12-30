@@ -1,3 +1,4 @@
+const show = require('../models/show');
 const showModel = require('../models/show');
 
 /* 
@@ -75,6 +76,32 @@ showController.review = async (req, res, next) => {
   } catch (e) {
     return next(e);
   }
+}
+
+showController.deleteReview = async (req, res, next) => {
+  let { user } = res.locals;
+  let { id } = req.params;
+
+  show.findById(id, async function (err, show) {
+    if (err) {
+      return next(err);
+    }
+    try {
+      let userReview = show.reviews.find(
+        review => review.user.toString() === user._id.toString()
+      );
+      await show.reviews.id(userReview._id).remove();
+      // recalculate rating and review count of show
+      show.reviewCount = show.reviews.length;
+      show.ratings = show.reviews.reduce((sum, review) => review.rating + sum, 0) / show.reviewCount;
+
+      await show.save();
+      show = await getShow(show._id, user);
+      return res.status(200).send({ show });
+    } catch (e) {
+      return next(e);
+    }
+  });
 }
 
 module.exports = showController; 
