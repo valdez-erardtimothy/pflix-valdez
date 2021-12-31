@@ -1,5 +1,8 @@
 import React from 'react';
-import {  Image, Stack } from 'react-bootstrap';
+import { Stack } from 'react-bootstrap';
+import { Link } from 'react-router-dom';
+/* component import */
+import ActorJumbotron from './ActorJumbotron';
 
 export default function ActorList({actors}) {
 
@@ -8,22 +11,14 @@ export default function ActorList({actors}) {
     <Stack gap={4} >
       {actors?.length>0 && actors.map(actor=>{
         // show component
-        return <Stack direction="horizontal"
-          className='bg-dark text-light p-3 me-4 align-items-start' 
+        return <Link
           key={actor._id}
+          to={`/actors/${actor._id}`}
+          className='text-decoration-none'
+          title={`Go to actor details page`}
         >
-          <div>
-            <Image 
-              style={{height:"300px", width:"200px", objectFit:"cover"}}
-              src={actor?.images[0] ?? "/img/movie_placeholder.png"}/>
-          </div>  
-          <div
-            className="ms-2">
-            <h3>{actor.name}&nbsp;
-            </h3>
-            {actor?.notes && (<p>{actor.notes}</p>)}
-          </div>         
-        </Stack>;
+          <ActorJumbotron key={actor._id} actor={actor}/> 
+        </Link>; 
 
       })}
     </Stack> 

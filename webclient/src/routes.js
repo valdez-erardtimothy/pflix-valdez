@@ -33,6 +33,7 @@ import AuthenticatedRoute from './components/AuthenticatedRoute';
 import LoginSuccess from './pages/auth/LoginSuccess';
 import RegisterSuccess from './pages/auth/RegisterSuccess';
 import ShowDetails from './pages/ShowDetails';
+import ActorDetails from './pages/ActorDetails';
 
 // private route solution from https://stackoverflow.com/users/13307304/dallin-romney 
 // https://stackoverflow.com/questions/69864165/error-privateroute-is-not-a-route-component-all-component-children-of-rou
@@ -48,6 +49,7 @@ const routes = () => {
       <Route path="register/success" element={<RegisterSuccess/>}/>
       <Route path="search" element={<SearchShow/>}/>
       <Route path="/shows/:showId" element={<ShowDetails/>}/>
+      <Route path="/actors/:actorId" element={<ActorDetails/>}/>
     </Route>
     <Route path="/admin" element={<AdminRoute/>}>
       <Route element={<AdminLayout/>}>

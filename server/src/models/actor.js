@@ -1,5 +1,5 @@
 const { Schema, model } = require('mongoose');
-
+const [intSchemaTypes] = require('../utils/propertySchemaTypes');
 
 const actorSchema = Schema({
   name: {
@@ -15,7 +15,35 @@ const actorSchema = Schema({
   images: [{
     type: String,
     required: false
-  }]
+  }],
+  reviews: [
+    {
+      user: {
+        type: Schema.Types.ObjectId,
+        ref: 'User',
+        required: true,
+      },
+      rating: {
+        ...intSchemaTypes,
+        min: 1,
+        max: 5
+      },
+      comment: {
+        type: String,
+        required: false,
+      }
+    }
+  ],
+  ratings: {
+    type: Number,
+    required: false,
+    min: 1,
+    max: 5
+  },
+  reviewCount: {
+    ...intSchemaTypes,
+    default: 0
+  }
 }, { timestamps: true });
 
 module.exports = model('Actor', actorSchema);

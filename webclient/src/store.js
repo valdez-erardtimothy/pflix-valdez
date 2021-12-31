@@ -10,6 +10,7 @@ import loadingReducer from './features/loadingSlice';
 import authReducer from './features/authSlice';
 import searchReducer from './features/searchSlice';
 import showReducer from './features/showSlice';
+import actorReducer from './features/actorSlice';
 let reducers = combineReducers({
   loading:loadingReducer,
   admin: combineReducers({
@@ -22,6 +23,7 @@ let reducers = combineReducers({
   }),
   auth:authReducer,
   search:searchReducer,
+  actor:actorReducer,
   show: showReducer
 });
 
