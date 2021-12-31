@@ -9,7 +9,8 @@ const seederPath = path.resolve(__dirname, "..", "seeders");
 
 Promise.all([
   require(`${seederPath}/showSeed.js`).seed(),
-  require(`${seederPath}/adminSeed.js`).seed()
+  require(`${seederPath}/adminSeed.js`).seed(),
+  require(`${seederPath}/userSeed.js`).seed()
 ]).then(() => {
   exit();
 });
