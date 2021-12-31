@@ -1,6 +1,6 @@
 const { Schema, model } = require('mongoose');
 const [intSchemaTypes] = require('../utils/propertySchemaTypes');
-
+const filter = new (require('bad-words'))();
 const actorSchema = Schema({
   name: {
     type: String,
@@ -31,6 +31,7 @@ const actorSchema = Schema({
       comment: {
         type: String,
         required: false,
+        set: val => filter.clean(val)
       }
     }
   ],
