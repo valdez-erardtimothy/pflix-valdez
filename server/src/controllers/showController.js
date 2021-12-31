@@ -93,7 +93,11 @@ showController.deleteReview = async (req, res, next) => {
       await show.reviews.id(userReview._id).remove();
       // recalculate rating and review count of show
       show.reviewCount = show.reviews.length;
-      show.ratings = show.reviews.reduce((sum, review) => review.rating + sum, 0) / show.reviewCount;
+      if (show.reviewCount > 0) {
+        show.ratings = show.reviews.reduce((sum, review) => review.rating + sum, 0) / show.reviewCount;
+      } else {
+        show.ratings = undefined;
+      }
 
       await show.save();
       show = await getShow(show._id, user);

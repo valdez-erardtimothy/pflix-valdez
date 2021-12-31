@@ -91,8 +91,14 @@ actorContoller.deleteReview = async (req, res, next) => {
       );
       await actor.reviews.id(userReview._id).remove();
       // recalculate rating and review count of show
+
       actor.reviewCount = actor.reviews.length;
-      actor.ratings = actor.reviews.reduce((sum, review) => review.rating + sum, 0) / actor.reviewCount;
+      if (actor.reviewCount > 0) {
+        actor.ratings = actor.reviews.reduce((sum, review) => review.rating + sum, 0) / actor.reviewCount;
+
+      } else {
+        actor.ratings = undefined;
+      }
 
       await actor.save();
       actor = await getActor(actor._id, user);
