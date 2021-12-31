@@ -7,12 +7,17 @@ searchController.search = async (req, res, next) => {
   // retrieve search params
   let {
     keyword,
-    entity = "show"
+    entity = "show",
+    rating = "none"
   } = req.query;
   // model to query
   let entityModel;
   // query conditions setup
   let where = {};
+  console.debug('rating:', rating)
+  if (rating !== "none") {
+    where.ratings = { $gte: parseInt(rating) };
+  }
   keyword = new RegExp(keyword, 'i');
   // set model and respective fields for keyword condition
   if (entity == "actor") {
