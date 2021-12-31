@@ -4,9 +4,10 @@ import { useLocation, useSearchParams,  } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAlert } from 'react-alert';
 import { Button, ButtonGroup,FloatingLabel, Form, Placeholder } from 'react-bootstrap';
+import InfiniteScroll from 'react-infinite-scroll-component';
 
 /* actions */
-import { search } from '../features/searchSlice';
+import { displayMore, search } from '../features/searchSlice';
 
 /* component imports */
 import SearchShow from '../components/SearchBox';
@@ -31,8 +32,10 @@ export default function SearchPage(){
 
   /* redux states */
   const {
-    searched, 
-    searchStatus
+    searched,
+    searchStatus,
+    displayed,
+    
   } = useSelector(state=>state.search);
 
   /* local state */
@@ -145,8 +148,20 @@ export default function SearchPage(){
       <main>
         <h4>Search: {currentKeyword || "n/a"}</h4>
         {searchLoaded ?(<>
-          {currentEntity === "show" && <ShowList shows={searched}/>} 
-          {currentEntity === "actor" && <ActorList actors={searched}/>}
+          <InfiniteScroll
+            dataLength={displayed.length}
+            next={()=>{dispatch(displayMore());}}
+            hasMore={searched.length>displayed.length}
+            loader={<h6>Loading</h6>}
+            endMessage={
+              <p className="bg-light" style={{ textAlign: "center" }}>
+                <b>Nothing more to load.</b>
+              </p>
+            }
+          >
+            {currentEntity === "show" && <ShowList shows={displayed}/>} 
+            {currentEntity === "actor" && <ActorList actors={displayed}/>}
+          </InfiniteScroll>
         </> 
         ):<Placeholder className="w-100"/>}
       </main>
