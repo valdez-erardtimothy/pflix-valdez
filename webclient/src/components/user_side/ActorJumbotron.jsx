@@ -14,7 +14,7 @@ export default function ActorJumbotron({actor}) {
       <div
         className="ms-2">
         <h3>{actor.name}&nbsp;</h3>
-        {actor?.ratings ? <p>{actor.ratings}
+        {actor?.ratings ? <p>{actor.ratings.toFixed(2)}
           <span className="material-icons">grade</span> out of 5&nbsp;
           <small className="text-muted">({actor.reviewCount} reviews)</small>
         </p> : (

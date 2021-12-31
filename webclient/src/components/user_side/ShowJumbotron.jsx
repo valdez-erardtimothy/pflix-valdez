@@ -17,7 +17,7 @@ export default function ShowJumbotron({show}) {
           {show.showType}
         </small>
       </h3>
-      {show?.ratings ? <p>{show.ratings}
+      {show?.ratings ? <p>{show.ratings.toFixed(2)}
         <span className="material-icons">grade</span> out of 5&nbsp;
         <small className="text-muted">({show.reviewCount} reviews)</small>
       </p> : (
