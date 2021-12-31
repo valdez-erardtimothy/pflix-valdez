@@ -26,6 +26,8 @@ export default function SearchPage(){
   const currentKeyword = searchParams.get('keyword');
   const currentEntity = searchParams.get('entity');
   const ratingFloor = searchParams.get('rating') ?? "none";
+  const filterFrom = searchParams.get('dateStart') ?? "";
+  const filterTo = searchParams.get('dateEnd') ?? "";
 
   /* redux states */
   const {
@@ -35,12 +37,14 @@ export default function SearchPage(){
 
   /* local state */
   let [searchLoaded, setSearchLoaded] = useState(true);
+  const [dateStartInput, setDateStartInput ]= useState(filterFrom);
+  const [dateEndInput, setDateEndInput]= useState(filterTo);
 
   /* effects */
   // search "event" handler
   useEffect(()=>{
     dispatch(search(location.search));
-  }, [currentKeyword, currentEntity, ratingFloor]);
+  }, [currentKeyword, currentEntity, ratingFloor, filterFrom, filterTo]);
 
   // search status checker
   useEffect(()=> {
@@ -62,6 +66,29 @@ export default function SearchPage(){
     ]);
   };
 
+  const applyDateFilter = () => {
+    if(!(dateStartInput) || !dateEndInput) {
+      alert.error('Both Start and end range must be set');
+      return;
+    }
+    let entries = [...searchParams.entries()]
+      .filter(param=>!['dateStart','dateEnd'].includes(param[0]));
+    setSearchParams([
+      ...entries,
+      ['dateStart', dateStartInput],
+      ['dateEnd', dateEndInput],
+    ]);
+    
+  };
+  const resetDateFilter = () => {
+    let entries = [...searchParams.entries()]
+      .filter(param=>!['dateStart','dateEnd'].includes(param[0]));
+    
+    setSearchParams([...entries]);
+    setDateStartInput('');
+    setDateEndInput('');
+  };
+
   /* render */
   return <>
     <div className="mb-5">
@@ -75,7 +102,7 @@ export default function SearchPage(){
             Exclude ratings below
           </Form.Label>
           <Form.Select
-            value={ratingFloor  }
+            value={ratingFloor}
             onChange={ratingChangeHandler}
           >
             {[...Array(5).keys()].map(index => (
@@ -94,17 +121,23 @@ export default function SearchPage(){
               controlId="releaseFilterFrom"
               className="mb-2"
             >
-              <Form.Control type="date"/>  
+              <Form.Control type="date"
+                value={dateStartInput}
+                onChange={(e)=>setDateStartInput(e.target.value )}
+              />  
             </FloatingLabel>
             <FloatingLabel
               label="To"
-              controlId="releaseDateFilterTo"
+              controlId="releaseDateFilterEnd"
             >
-              <Form.Control type="date"/>  
+              <Form.Control type="date"
+                value={dateEndInput}
+                onChange={(e)=>setDateEndInput(e.target.value )}
+              />  
             </FloatingLabel>
             <ButtonGroup className="mt-2">
-              <Button>Apply</Button>
-              <Button variant="secondary">Clear</Button>
+              <Button onClick={applyDateFilter}>Apply</Button>
+              <Button variant="secondary" onClick={resetDateFilter}>Clear</Button>
             </ButtonGroup> 
           </Form.Group>
         )}

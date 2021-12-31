@@ -8,7 +8,9 @@ searchController.search = async (req, res, next) => {
   let {
     keyword,
     entity = "show",
-    rating = "none"
+    rating = "none",
+    dateStart,
+    dateEnd
   } = req.query;
   // model to query
   let entityModel;
@@ -27,6 +29,9 @@ searchController.search = async (req, res, next) => {
   } else if (entity == "show") {
     entityModel = showModel;
     where.title = keyword;
+    if (dateStart && dateEnd) {
+      where.released = { $gte: dateStart, $lte: dateEnd }
+    }
   }
   // do the query 
   console.debug('entityModel =', entityModel)

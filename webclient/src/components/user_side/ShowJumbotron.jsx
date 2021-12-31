@@ -23,6 +23,7 @@ export default function ShowJumbotron({show}) {
       </p> : (
         <p>No Reviews</p>
       )}
+      <p>Released: {(new Date(show.released)).toDateString()}</p>
       <p>{show.genre}</p>
       <p>{show.runtimeMinutes} minutes</p>
       <p>{show.plot}</p>
