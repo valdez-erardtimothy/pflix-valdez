@@ -7,10 +7,13 @@ const requireAuthenticated = require('../middleware/require-auth');
 router.use(loadAuthenticated());
 
 const {
+  list,
   get,
   review,
   deleteReview
 } = require("../controllers/showController");
+
+router.get('/shows', list);
 
 router.route('/shows/:id')
   .get(get)

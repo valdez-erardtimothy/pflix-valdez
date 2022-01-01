@@ -1,4 +1,3 @@
-const show = require('../models/show');
 const showModel = require('../models/show');
 
 /* 
@@ -36,6 +35,24 @@ const getShow = function (id, user) {
 /* controller methods */
 let showController = {};
 
+showController.list = async (req, res, next) => {
+  let {
+    pageSkip = 0,
+    itemsPerPage = 10
+  } = req.query;
+
+  try {
+    let skip = pageSkip * itemsPerPage;
+    const [count, shows] = await Promise.all([
+      showModel.count(),
+      showModel.find().skip(skip).limit(itemsPerPage).exec()
+    ]);
+    res.status(200).send({ count, shows });
+  } catch (e) {
+    return next(e)
+  }
+
+}
 
 showController.get = async (req, res, next) => {
   let { id } = req.params;
@@ -82,7 +99,7 @@ showController.deleteReview = async (req, res, next) => {
   let { user } = res.locals;
   let { id } = req.params;
 
-  show.findById(id, async function (err, show) {
+  showModel.findById(id, async function (err, show) {
     if (err) {
       return next(err);
     }
