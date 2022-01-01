@@ -36,17 +36,22 @@ const getShow = function (id, user) {
 let showController = {};
 
 showController.list = async (req, res, next) => {
-  let {
-    pageSkip = 0,
-    itemsPerPage = 10
-  } = req.query;
+  let skip = parseInt(req.query.skip) || 0;
+  let itemsPerPage = parseInt(req.query.limit) || 10;
+
+  let showsQuery = showModel
+    .find()
+    .sort({ released: -1 })
+    .skip(skip)
+    .limit(itemsPerPage)
+    .exec();
 
   try {
-    let skip = pageSkip * itemsPerPage;
     const [count, shows] = await Promise.all([
       showModel.count(),
-      showModel.find().skip(skip).limit(itemsPerPage).exec()
+      showsQuery
     ]);
+    console.debug('shows:', shows.length);
     res.status(200).send({ count, shows });
   } catch (e) {
     return next(e)

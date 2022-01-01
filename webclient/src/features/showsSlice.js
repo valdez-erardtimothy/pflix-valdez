@@ -3,8 +3,11 @@ import axios from "axios";
 
 export const load = createAsyncThunk(
   'shows/load',
-  async function() {
-    let response = await axios.get('/api/shows');
+  async function(data,  {getState}) {
+    let {showsPerPage, loaded} = getState().shows;
+    let response = await axios.get(
+      `/api/shows?skip=${loaded.length}&limit=${showsPerPage}`
+    );
     return response.data;
   }
 );
@@ -15,10 +18,15 @@ const showsSlice = createSlice({
     loadStatus: "idle",
     loaded: [],
     showTotalCount: 0,
+    showsPerPage:10
   }, 
   reducers: {
     clearLoadStatus: (state)=> {
       state.loadStatus = 'idle';
+    },
+    clearLoaded:(state)=> {
+      state.loaded = [];
+      state.showTotalCount = 0;
     }
   },
   extraReducers: builder=>{
@@ -39,7 +47,8 @@ const showsSlice = createSlice({
 });
 
 export const {
-  clearLoadStatus
+  clearLoadStatus,
+  clearLoaded
 } = showsSlice.actions;
 
 export default showsSlice.reducer;
