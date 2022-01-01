@@ -3,11 +3,13 @@ import React, {useEffect} from 'react';
 import { useDispatch, useSelector } from 'react-redux';
 import {Helmet} from 'react-helmet-async';
 import InfiniteScroll from 'react-infinite-scroll-component';
+import { Placeholder } from 'react-bootstrap';
 
 /* redux action imports */
 import {
   load,
-  clearLoadStatus
+  clearLoadStatus,
+  clearLoaded
 } from '../features/showsSlice';
 
 /* component imports */
@@ -37,17 +39,34 @@ export default function ShowsPage(){
   const fetchMore = () => {
     dispatch(load());
   };
+
+  /* event handlers */
+  const refreshShows = (e) => {
+    e.preventDefault();
+    dispatch(clearLoaded());
+    dispatch(load());
+  };
+
   /* render */
   return <>
     <Helmet>
       <title>Shows</title>
     </Helmet> 
-    <h1>Browse all shows</h1>
+    <h1>Browse all shows
+      <a onClick={refreshShows}
+        className="material-icons no-underline text-decoration-none"
+        href="javascript:;"
+      >refresh</a>
+    </h1>
     
     <InfiniteScroll
       dataLength={loaded.length}
       next={fetchMore}
       hasMore={loaded.length<showTotalCount}
+      loader={<Placeholder 
+        animation="wave" 
+        style={{height:"200px",width:"100%"}}
+      />}
     >
       <ShowList shows={loaded}/>
     </InfiniteScroll>
