@@ -7,7 +7,7 @@ import { Button, ButtonGroup,FloatingLabel, Form, Placeholder } from 'react-boot
 import InfiniteScroll from 'react-infinite-scroll-component';
 
 /* actions */
-import { displayMore, search } from '../features/searchSlice';
+import { clearSearchStatus, displayMore, search } from '../features/searchSlice';
 
 /* component imports */
 import SearchShow from '../components/SearchBox';
@@ -55,6 +55,7 @@ export default function SearchPage(){
     setSearchLoaded( searchStatus !== "loading" ); 
     if(searchStatus === "failed") {
       alert.error("failed in Searching");
+      dispatch(clearSearchStatus());
     }
   }, [searchStatus]);
 
