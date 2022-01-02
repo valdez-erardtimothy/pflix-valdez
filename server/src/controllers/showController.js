@@ -1,5 +1,5 @@
 const showModel = require('../models/show');
-
+const filmographyModel = require('../models/filmography')
 /* 
 internal methods 
 
@@ -16,10 +16,13 @@ const getShow = function (id, user) {
   return new Promise((resolve, reject) => {
     showModel.findById(id)
       .populate({ path: "reviews.user", select: ["_id", "name"] })
-      .exec(function (err, show) {
+      .exec(async function (err, show) {
         if (err) {
           return reject(err);
         }
+        let cast = await filmographyModel.find({ show: show._id })
+          .populate('actor')
+          .exec();
         // transforms
         show = show.toObject();
         if (user) {
@@ -27,6 +30,7 @@ const getShow = function (id, user) {
             review => review.user._id.toString() === user._id.toString()
           );
         }
+        show.cast = cast;
         return resolve(show);
       });
   })
