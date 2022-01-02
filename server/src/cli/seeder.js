@@ -18,9 +18,13 @@ Promise.all([
   Promise.all([
     require(`${seederPath}/showReviewSeed.js`).seed(),
     require(`${seederPath}/actorReviewSeed.js`).seed(),
+    require(`${seederPath}/filmographySeed.js`).seed()
   ]).then(() => {
     exit();
   })
+
 });
+
+
 
 
