@@ -1,9 +1,9 @@
 /* pkg import */
 import React, {useEffect} from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { Link, useParams, useNavigate } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAlert } from 'react-alert';
-import {Button, Form, FloatingLabel} from 'react-bootstrap';
+import {Button, Form, FloatingLabel, Stack, Image} from 'react-bootstrap';
 /* component import */
 import ActorJumbotron from '../components/user_side/ActorJumbotron';
 import Review from '../components/user_side/Review';
@@ -95,6 +95,24 @@ export default function ActorDetails() {
     {actor && (
       <>
         <ActorJumbotron actor={actor}/>
+        <h4>Filmography</h4>
+        <Stack 
+          direction="horizontal" 
+          className='overflow-scroll mb-2 w-100 align-items-start'
+        >
+          {actor.filmography.map(character => (
+            <Link key={character._id} to={`/shows/${character.show._id}`}>
+              <div className="mx-2 my-1 text-center">
+                <Image 
+                  style={{height:"180px", width:"120px"}} 
+                  src={character.show?.images[0] ?? "/img/movie_placeholder.png"}
+                />
+                <h6 className="text-xs">{character.show.title} </h6>
+                <p className="text-dark text-xs">{character.character}</p>
+              </div>
+            </Link>
+          ))}
+        </Stack>
         <h4 className='mt-5 mb-2'>Reviews</h4>
         {/* start of user review */}
         {authenticated ? <> 
