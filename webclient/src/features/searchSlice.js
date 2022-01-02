@@ -12,8 +12,11 @@ export const search = createAsyncThunk(
 const searchSlice = createSlice({
   name: "/search",
   initialState: {
-    searched: {},
+    searched: [],
     searchStatus: "idle",
+    displayed: [],
+    itemsPerScroll:10,
+    
   },
   reducers: {
     clearSearched: (state) => {
@@ -21,6 +24,14 @@ const searchSlice = createSlice({
     },
     clearSearchStatus: (state) => {
       state.searchStatus = "idle";
+    },
+    displayMore: (state) => {
+      state.displayed = state.searched.slice(0,
+        state.displayed.length+state.itemsPerScroll
+      );
+    },
+    clearDisplayed: (state) => {
+      state.displayed=[];
     }
   },
   extraReducers: builder => {
@@ -31,6 +42,7 @@ const searchSlice = createSlice({
       .addCase(search.fulfilled, (state,action) => {
         state.searchStatus = "success";
         state.searched = action.payload?.results;
+        state.displayed = state.searched.slice(0,state.itemsPerScroll);
       })
       .addCase(search.rejected, (state)=> {
         state.searchStatus = "failed";
@@ -41,7 +53,9 @@ const searchSlice = createSlice({
 
 export const {
   clearSearchStatus,
-  clearSearched
+  clearSearched,
+  displayMore,
+  clearDisplayed
 } = searchSlice.actions;
 
 export default searchSlice.reducer;

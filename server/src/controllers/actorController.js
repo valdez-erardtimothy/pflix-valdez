@@ -1,4 +1,5 @@
 const actorModel = require('../models/actor');
+const filmographyModel = require('../models/filmography')
 
 /* 
 internal methods 
@@ -16,12 +17,16 @@ const getActor = function (id, user) {
   return new Promise((resolve, reject) => {
     actorModel.findById(id)
       .populate({ path: "reviews.user", select: ["_id", "name"] })
-      .exec(function (err, actor) {
+      .exec(async function (err, actor) {
         if (err) {
           return reject(err);
         }
+        let filmography = await filmographyModel.find({ actor: actor._id })
+          .populate('show')
+          .exec();
         // transforms
         actor = actor.toObject();
+        actor.filmography = filmography;
         if (user) {
           actor.reviewOfAuthenticated = actor.reviews.find(
             review => review.user._id.toString() === user._id.toString()

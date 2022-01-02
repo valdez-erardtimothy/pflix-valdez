@@ -37,7 +37,10 @@ searchController.search = async (req, res, next) => {
   console.debug('entityModel =', entityModel)
   let data = await entityModel.find(where);
 
-  res.status(200).send({ results: data });
+
+  res.status(200).send({
+    results: data,
+  });
 }
 
 
