@@ -27,18 +27,25 @@ dashboardController.loadDashboard = async function (req, res, next) {
     .exec();
   let topTvGenreQuery = showModel.aggregate([
     { $match: { showType: "TV Show" }, },
-    { $group: { _id: "$genre", count: { $sum: 1 } } },
-    { $sort: { count: -1 } }
+    {
+      $group: {
+        _id: "$genre",
+        count: { $sum: 1 },
+        avgRatings: { $avg: "$ratings" }
+      }
+    },
+    { $sort: { avgRatings: -1 } }
   ]);
   let topMovieGenreQuery = showModel.aggregate([
     { $match: { showType: "Movie" } },
     {
       $group: {
         _id: "$genre",
-        count: { $sum: 1 }
+        count: { $sum: 1 },
+        avgRatings: { $avg: "$ratings" }
       }
     },
-    { $sort: { count: -1 } }
+    { $sort: { avgRatings: -1 } }
   ]);
 
 
@@ -67,25 +74,25 @@ dashboardController.loadDashboard = async function (req, res, next) {
     }
     showCount.total = showCount.tv + showCount.movie
 
-    // transform tv genre ranking
-    let tvGenreRankingArr = { total: 0 };
-    tvGenreRanking.forEach(genre => {
-      tvGenreRankingArr.total += genre.count;
-      tvGenreRankingArr[genre._id] = genre.count
-    })
-    let movieGenreRankingArr = { total: 0 };
-    movieGenreRanking.forEach(genre => {
-      movieGenreRankingArr.total += genre.count;
-      movieGenreRankingArr[genre._id] = genre.count
-    })
+    // // transform tv genre ranking
+    // let tvGenreRankingArr = { total: 0 };
+    // tvGenreRanking.forEach(genre => {
+    //   tvGenreRankingArr.total += genre.count;
+    //   tvGenreRankingArr[genre._id] = { ...genre }
+    // })
+    // let movieGenreRankingArr = { total: 0 };
+    // movieGenreRanking.forEach(genre => {
+    //   movieGenreRankingArr.total += genre.count;
+    //   movieGenreRankingArr[genre._id] = genre.count
+    // })
 
     res.status(200).send({
       showCount,
       topMovies,
       topTv,
       topActors,
-      tvGenreRanking: tvGenreRankingArr,
-      movieGenreRanking: movieGenreRankingArr
+      tvGenreRanking,
+      movieGenreRanking
     })
   } catch (e) {
     return next(e);
