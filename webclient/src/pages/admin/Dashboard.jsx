@@ -85,9 +85,46 @@ export default function Dashboard() {
           },
           {
             label: "Votes",
-            type:"line",
+            type:"bar",
             yAxisID: "votes",
             data: topMovies.map(movie=>movie.reviewCount),
+            ...generateRGBAStrings(1),
+          },
+        ]
+      },
+      options: {
+        scales: {
+          avgRating: {
+            type:"linear",
+            position:"left"
+          },
+          votes: {
+            type: 'linear',
+            position: "right"
+          }
+        }
+      }
+
+    };
+  };
+
+  const topTVShowsChartObject = ({topTv}) => {
+    return {
+      data: {
+        labels: topTv.map(tvShow=>tvShow.title),
+        datasets:[
+          {
+            label: "Rating",
+            type:"bar",
+            yAxisID: "avgRating",
+            data: topTv.map(tvShow=>tvShow.ratings),
+            ...generateRGBAStrings(1),
+          },
+          {
+            label: "Votes",
+            type:"bar",
+            yAxisID: "votes",
+            data: topTv.map(tvShow=>tvShow.reviewCount),
             ...generateRGBAStrings(1),
           },
         ]
@@ -138,7 +175,7 @@ export default function Dashboard() {
                     <thead>
                       <tr>
                         <th>Title</th>
-                        <th>Rating 
+                        <th>Rating&nbsp;
                           <span className="text-muted">
                        (reviews)
                           </span>
@@ -161,6 +198,35 @@ export default function Dashboard() {
                   </Table>
 
                 </Col>
+                <Col md="6">
+                  <h6>Top Rated TV Shows</h6>
+                  <Table size="sm" borderless striped hover className='text-start'>
+                    <thead>
+                      <tr>
+                        <th>Title</th>
+                        <th>Rating&nbsp;
+                          <span className="text-muted">
+                       (reviews)
+                          </span>
+                        </th>
+                      </tr>
+
+                    </thead>
+                    <tbody>
+                      {topTv.map(tvShow=>{
+                        return <tr key={tvShow._id}>
+                          <td>{tvShow.title}</td>
+                          <td>{tvShow.ratings.toFixed(2)} &nbsp;
+                            <small className="text-muted">
+                          ({tvShow.reviewCount})
+                            </small>
+                          </td>
+                        </tr>;
+                      })}
+                    </tbody>
+                  </Table>
+
+                </Col>
               </Row>
               <Row sm="6">
                 
@@ -170,6 +236,11 @@ export default function Dashboard() {
           <div className="bg-light mt-4 p-1">
             <h4 className='p-2'>Top rated Movies</h4>
             <Chart {...topMoviesChartObject({topMovies})}/>
+
+          </div>
+          <div className="bg-light mt-4 p-1">
+            <h4 className='p-2'>Top rated TV Shows</h4>
+            <Chart {...topTVShowsChartObject({topTv})}/>
 
           </div>
         </>
