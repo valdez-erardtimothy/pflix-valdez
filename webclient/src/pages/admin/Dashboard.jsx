@@ -11,9 +11,10 @@ import { Chart as ChartJS,
   CategoryScale,
   BarElement,
   PointElement,
-  LineElement
+  LineElement,
+  RadialLinearScale
 } from 'chart.js';
-import {Doughnut, Chart} from 'react-chartjs-2';
+import {Doughnut, Chart, PolarArea} from 'react-chartjs-2';
 
 /* action import */
 import {load} from '../../features/admin/dashboardSlice';
@@ -29,7 +30,8 @@ ChartJS.register(ArcElement,
   CategoryScale,
   BarElement,
   PointElement,
-  LineElement
+  LineElement,
+  RadialLinearScale
 );
 
 export default function Dashboard() {
@@ -181,6 +183,31 @@ export default function Dashboard() {
       }
 
     };
+  };
+
+  const topMovieGenresObject = ({genres}) => {
+    return {
+      data:{
+        labels:genres.map(genre=>genre._id),
+        datasets: [{
+          label: "Top Movie Genres",
+          data: genres.map(genre=>genre.count),
+          ...generateRGBAStrings(genres.length)
+        }],
+      }
+    };
+  };
+
+  const topTvGenresObject = ({genres}) => {
+    return {
+      data:{
+        labels:genres.map(genre=>genre._id),
+        datasets: [{
+          label: "Top TV Genres",
+          data: genres.map(genre=>genre.count),
+          ...generateRGBAStrings(genres.length)
+        }],
+      }};
   };
 
   useEffect(()=> {
@@ -336,8 +363,19 @@ export default function Dashboard() {
               </Col>
             </Row>
           </div>
-        </>
+          <Row>
+            <Col sm="6" lg="3">
+              <h4>Top Movie Genres</h4>
+              <PolarArea {...topMovieGenresObject({genres: popularMovieGenre})}/>
+            </Col>
+            <Col sm="6" lg="3">
+              <h4>Top TV Genres</h4>
+              <PolarArea {...topTvGenresObject({genres:popularTvGenre})}/>
+            </Col>
 
+          </Row>
+        </>
+        
       )}
      
     </Container>
