@@ -12,11 +12,11 @@ dashboardController.loadDashboard = async function (req, res, next) {
       }
     }
   ]);
-  let topMoviesQuery = showModel.find({ showType: "Movie" }, '_id title ratings')
+  let topMoviesQuery = showModel.find({ showType: "Movie" }, '_id title ratings reviewCount')
     .sort({ ratings: -1 })
     .limit(10)
     .exec();
-  let topTvQuery = showModel.find({ showType: 'TV Show' }, '_id title ratings')
+  let topTvQuery = showModel.find({ showType: 'TV Show' }, '_id title ratings reviewCount')
     .sort({ ratings: -1 })
     .limit(10)
     .exec();
