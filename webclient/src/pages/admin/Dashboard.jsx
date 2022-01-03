@@ -146,6 +146,43 @@ export default function Dashboard() {
     };
   };
 
+  const topActorsChartObject = ({topActors}) => {
+    return {
+      data: {
+        labels: topActors.map(actor=>actor.name),
+        datasets:[
+          {
+            label: "Rating",
+            type:"bar",
+            yAxisID: "avgRating",
+            data: topActors.map(actor=>actor.ratings),
+            ...generateRGBAStrings(1),
+          },
+          {
+            label: "Votes",
+            type:"bar",
+            yAxisID: "reviews",
+            data: topActors.map(actor=>actor.reviewCount),
+            ...generateRGBAStrings(1),
+          },
+        ]
+      },
+      options: {
+        scales: {
+          avgRating: {
+            type:"linear",
+            position:"left"
+          },
+          reviews: {
+            type: 'linear',
+            position: "right"
+          }
+        }
+      }
+
+    };
+  };
+
   useEffect(()=> {
     let isLoaded = loadStatus !== "loading";
     if(isLoaded) { 
@@ -251,6 +288,45 @@ export default function Dashboard() {
             <h4 className='p-2'>Top rated TV Shows</h4>
             <Chart {...topTVShowsChartObject({topTv})}/>
 
+          </div>
+          <div className="bg-light mt-4 p-1">
+            <h4 className="text-center">Top Rated Actors</h4>
+            <Row sm="8" lg="10">
+              <Col  lg="10">
+                <Chart {...topActorsChartObject({topActors})}/>
+              </Col>
+              <Col lg="2">
+                <Table size="sm" borderless striped>
+                  <thead>
+                    <tr>
+                      <th>Actor</th>
+                      <th>Rating &nbsp;
+                        <span className="text-muted">
+                        (reviews)
+                        </span>
+                      </th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {topActors.map(actor=>(
+                      <tr key={actor._id}>
+                        <td>
+                          <Link to={`/admin/actors/${actor._id}`}>
+                            {actor.name}
+
+                          </Link>
+                        </td>
+                        <td>{actor.ratings.toFixed(2)}&nbsp;
+                          <small className="text-muted">
+                            ({actor.reviewCount})
+                          </small>
+                        </td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </Table>
+              </Col>
+            </Row>
           </div>
         </>
 

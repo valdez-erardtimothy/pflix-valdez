@@ -21,7 +21,7 @@ dashboardController.loadDashboard = async function (req, res, next) {
     .limit(10)
     .exec();
   let topActorsQuery = actorModel.find()
-    .select('_id name ratings')
+    .select('_id name ratings reviewCount')
     .sort({ ratings: -1 })
     .limit(10)
     .exec();
