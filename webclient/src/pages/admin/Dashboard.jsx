@@ -279,16 +279,24 @@ export default function Dashboard() {
               </Row>
             </Col>
           </Row>
-          <div className="bg-light mt-4 p-1">
-            <h4 className='p-2'>Top rated Movies</h4>
-            <Chart {...topMoviesChartObject({topMovies})}/>
+          <Row >
+            <Col xl="6">
 
-          </div>
-          <div className="bg-light mt-4 p-1">
-            <h4 className='p-2'>Top rated TV Shows</h4>
-            <Chart {...topTVShowsChartObject({topTv})}/>
+              <div className="bg-light mt-4 p-1">
+                <h4 className='p-2'>Top rated Movies</h4>
+                <Chart {...topMoviesChartObject({topMovies})}/>
 
-          </div>
+              </div>
+            </Col>
+            <Col xl="6">
+              <div className="bg-light mt-4 p-1">
+                <h4 className='p-2'>Top rated TV Shows</h4>
+                <Chart {...topTVShowsChartObject({topTv})}/>
+
+              </div>
+
+            </Col>
+          </Row>
           <div className="bg-light mt-4 p-1">
             <h4 className="text-center">Top Rated Actors</h4>
             <Row sm="8" lg="10">
