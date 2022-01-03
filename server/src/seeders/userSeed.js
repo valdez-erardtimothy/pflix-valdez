@@ -8,6 +8,7 @@ const faker = require('faker');
 
 module.exports = {
   seed: async () => {
+    console.log('users seeding...')
     let count = 100;
     while (count > 0) {
       user.create({
@@ -24,6 +25,7 @@ module.exports = {
       });
       count--;
     }
+    console.log('users seeding done')
   }
 }
 
