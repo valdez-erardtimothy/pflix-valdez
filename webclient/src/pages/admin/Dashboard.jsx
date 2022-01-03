@@ -2,6 +2,7 @@ import React, {useEffect} from 'react';
 import { Helmet } from 'react-helmet-async';
 import { useDispatch, useSelector } from 'react-redux';
 import {Container, Row, Col, Table} from 'react-bootstrap';
+import {Link} from 'react-router-dom';
 import { Chart as ChartJS, 
   ArcElement, 
   Tooltip, 
@@ -186,7 +187,11 @@ export default function Dashboard() {
                     <tbody>
                       {topMovies.map(movie=>{
                         return <tr key={movie._id}>
-                          <td>{movie.title}</td>
+                          <td>
+                            <Link to={`/admin/shows/${movie._id}`}>
+                              {movie.title}
+                            </Link>
+                          </td>
                           <td>{movie.ratings.toFixed(2)} &nbsp;
                             <small className="text-muted">
                           ({movie.reviewCount})
@@ -215,7 +220,11 @@ export default function Dashboard() {
                     <tbody>
                       {topTv.map(tvShow=>{
                         return <tr key={tvShow._id}>
-                          <td>{tvShow.title}</td>
+                          <td>
+                            <Link to={`/admin/shows/${tvShow._id}`}>
+                              {tvShow.title}
+                            </Link>
+                          </td>
                           <td>{tvShow.ratings.toFixed(2)} &nbsp;
                             <small className="text-muted">
                           ({tvShow.reviewCount})
