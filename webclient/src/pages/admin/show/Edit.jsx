@@ -18,9 +18,9 @@ export default function Edit()  {
   } = useSelector(state=>state.admin.show);
   const dispatch = useDispatch();
   // temporarily disable eslint while form not submittable
-  /* eslint-disable no-unused-vars */
   let {id} = useParams();
   let [title, setTitle] = useState("");
+  let [genre, setGenre] = useState("");
   let [runtimeMinutes, setRuntimeMinutes] = useState("");
   let [releaseYear, setReleaseYear] =  useState("");
   let [releaseMonth, setReleaseMonth] = useState("");
@@ -48,6 +48,7 @@ export default function Edit()  {
       releaseDateObject = new Date(show.released);
       console.debug(releaseDateObject);
       setTitle(show.title);
+      setGenre(show.genre);
       setRuntimeMinutes(show.runtimeMinutes);
       setReleaseYear(releaseDateObject.getFullYear());
       setReleaseDay(releaseDateObject.getDay());
@@ -89,6 +90,7 @@ export default function Edit()  {
     console.debug(e.target);
     let formData = new FormData();
     formData.set('title', title);
+    formData.set('genre', genre);
     formData.set('runtimeMinutes',runtimeMinutes);
     formData.set(
       "released",new Date(
@@ -122,6 +124,21 @@ export default function Edit()  {
           placeholder="Title"
           onChange={e=>setTitle(e.target.value)} 
           value={title}
+          required
+        />
+      </FloatingLabel>
+      
+      <FloatingLabel 
+        className="mb-4" 
+        controlId="createShowGenre" 
+        label="Genre">
+        
+        <Form.Control 
+          type="text" 
+          name="genre" 
+          placeholder="Genre"
+          onChange={e=>setGenre(e.target.value)} 
+          value={genre}
           required
         />
       </FloatingLabel>

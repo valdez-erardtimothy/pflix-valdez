@@ -9,6 +9,7 @@ import {createShow, clearCreateShowStatus} from '../../../features/admin/showSli
 export default function Create() {
   // temporarily disable eslint while form not submittable
   let [title, setTitle] = useState("");
+  let [genre, setGenre] = useState("");
   let [runtimeMinutes, setRuntimeMinutes] = useState("");
   let [releaseYear, setReleaseYear] =  useState("");
   let [releaseMonth, setReleaseMonth] = useState("");
@@ -29,6 +30,7 @@ export default function Create() {
     
     let createShowData = new FormData();
     createShowData.set('title', title);
+    createShowData.set('genre', genre);
     createShowData.set('runtimeMinutes',runtimeMinutes);
     createShowData.set(
       "released",
@@ -83,6 +85,20 @@ export default function Create() {
           placeholder="Title"
           onChange={e=>setTitle(e.target.value)} 
           value={title}
+          required
+        />
+      </FloatingLabel>
+      <FloatingLabel 
+        className="mb-4" 
+        controlId="createShowGenre" 
+        label="Genre">
+        
+        <Form.Control 
+          type="text" 
+          name="genre" 
+          placeholder="Genre"
+          onChange={e=>setGenre(e.target.value)} 
+          value={genre}
           required
         />
       </FloatingLabel>

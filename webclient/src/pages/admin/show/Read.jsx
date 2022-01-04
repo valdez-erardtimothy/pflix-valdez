@@ -93,6 +93,7 @@ export default function Read() {
             </small>
           </h1> 
           <h6>{show.showType}</h6>
+          <h6>{show.genre}</h6>
           <Table size="sm" borderless>
             <tbody>
               <tr>
