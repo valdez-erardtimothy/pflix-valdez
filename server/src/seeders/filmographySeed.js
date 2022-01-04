@@ -10,12 +10,13 @@ const removeDuplicate = require('../utils/removeDuplicate');
 module.exports = {
   seed: async () => {
     Promise.all([
-      actorModel.find({}, '_id'),
-      showModel.find({}, '_id')
+      actorModel.find(null, '_id'),
+      showModel.find(null, '_id')
     ]).then(([actors, shows]) => {
       actors.map(async actor => {
         let filmoEntries = [...Array(30)].map(() => {
-          let showIndex = Math.round(Math.random() * (shows.length - 1));
+          // pull a random show index
+          let showIndex = faker.datatype.number({ min: 0, max: shows.length - 1 });
           return {
             actor: actor._id,
             show: shows[showIndex]._id,
@@ -23,8 +24,11 @@ module.exports = {
           };
         });
         filmoEntries = removeDuplicate(filmoEntries, 'show');
-
-        await filmographyModel.insertMany(filmoEntries);
+        // insert one by one to prevent bulk write error
+        await Promise.all(filmoEntries.map(async entry => {
+          await filmographyModel.create(entry)
+          return;
+        }))
       });
     });
   }

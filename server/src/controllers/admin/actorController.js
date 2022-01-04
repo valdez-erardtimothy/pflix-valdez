@@ -111,9 +111,9 @@ actorController.update = async (req, res, next) => {
       // add image URL array to document
       fields = { ...fields, images: imgPaths };
     }
-    existingActor.overwrite(fields);
     try {
-      const updated = await existingActor.save();
+      // const updated = await existingActor.save();
+      let updated = await actor.findByIdAndUpdate(existingActor._id, fields);
       await filmography.deleteMany({ actor: existingActor._id });
       await filmography.insertMany(filmographyData);
       return res.status(200).send({ actor: updated });

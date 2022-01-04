@@ -7,6 +7,7 @@ import { useDispatch, useSelector } from 'react-redux';
 import { startLoad, endLoad } from '../../../features/loadingSlice';
 import { fetchShowAdmin, deleteShow } from '../../../features/admin/showSlice';
 import { clearLoadedShowAdmin, clearDeleteShowStatus } from '../../../features/admin/showSlice';
+import { toShorthand } from '../../../helpers/numberHelper';
 
 export default function Read() {
   let {id}= useParams();
@@ -93,6 +94,7 @@ export default function Read() {
             </small>
           </h1> 
           <h6>{show.showType}</h6>
+          <h6>{show.genre}</h6>
           <Table size="sm" borderless>
             <tbody>
               <tr>
@@ -107,6 +109,7 @@ export default function Read() {
           </Table>
           <p>Runtime: {show.runtimeMinutes} minutes</p>
           <p>Release Date: {new Date(show.released).toDateString()}</p>
+          <p>Gross Income: ${toShorthand(show.grossIncome)}</p>
           <h4>Plot</h4>
           <p>{show.plot}</p>
           <h4>Cast</h4>

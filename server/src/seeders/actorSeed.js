@@ -8,6 +8,7 @@ const faker = require('faker');
 
 module.exports = {
   seed: async () => {
+    console.log('actors seeding...');
     let count = 20;
     while (count > 0) {
       actor.create({
@@ -21,6 +22,7 @@ module.exports = {
       });
       count--;
     }
+    console.log('actors seeding done');
   }
 }
 

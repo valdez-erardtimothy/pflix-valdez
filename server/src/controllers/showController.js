@@ -55,7 +55,6 @@ showController.list = async (req, res, next) => {
       showModel.count(),
       showsQuery
     ]);
-    console.debug('shows:', shows.length);
     res.status(200).send({ count, shows });
   } catch (e) {
     return next(e)

@@ -12,6 +12,8 @@ import searchReducer from './features/searchSlice';
 import showReducer from './features/showSlice';
 import actorReducer from './features/actorSlice';
 import showsReducer from './features/showsSlice';
+import dashboardReducer from './features/admin/dashboardSlice';
+
 let reducers = combineReducers({
   loading:loadingReducer,
   admin: combineReducers({
@@ -21,6 +23,7 @@ let reducers = combineReducers({
     show: adminshowReducer,
     producers: adminProducersReducer,
     producer: adminProducerReducer,
+    dashboard: dashboardReducer
   }),
   auth:authReducer,
   search:searchReducer,

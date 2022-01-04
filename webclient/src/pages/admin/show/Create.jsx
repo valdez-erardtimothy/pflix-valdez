@@ -9,7 +9,9 @@ import {createShow, clearCreateShowStatus} from '../../../features/admin/showSli
 export default function Create() {
   // temporarily disable eslint while form not submittable
   let [title, setTitle] = useState("");
+  let [genre, setGenre] = useState("");
   let [runtimeMinutes, setRuntimeMinutes] = useState("");
+  let [gross, setGross] = useState("");
   let [releaseYear, setReleaseYear] =  useState("");
   let [releaseMonth, setReleaseMonth] = useState("");
   let [releaseDay, setReleaseDay] = useState("");
@@ -29,7 +31,9 @@ export default function Create() {
     
     let createShowData = new FormData();
     createShowData.set('title', title);
+    createShowData.set('genre', genre);
     createShowData.set('runtimeMinutes',runtimeMinutes);
+    createShowData.set('grossIncome',gross);
     createShowData.set(
       "released",
       new Date(
@@ -86,6 +90,20 @@ export default function Create() {
           required
         />
       </FloatingLabel>
+      <FloatingLabel 
+        className="mb-4" 
+        controlId="createShowGenre" 
+        label="Genre">
+        
+        <Form.Control 
+          type="text" 
+          name="genre" 
+          placeholder="Genre"
+          onChange={e=>setGenre(e.target.value)} 
+          value={genre}
+          required
+        />
+      </FloatingLabel>
       <FloatingLabel  
         className="mb-4" 
         controlId="createMovieYear" 
@@ -99,6 +117,21 @@ export default function Create() {
             parseInt(e.target.value)
           )}
           value={runtimeMinutes}
+          required
+        />
+      </FloatingLabel>
+      
+      <FloatingLabel  
+        className="mb-4" 
+        controlId="editMovieGross" 
+        label="Gross Income">
+        
+        <Form.Control 
+          type="number" 
+          name="grossIncome" 
+          placeholder="Gross Income"
+          onChange={e=>setGross(e.target.value)}
+          value={gross}
           required
         />
       </FloatingLabel>

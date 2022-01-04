@@ -18,10 +18,11 @@ export default function Edit()  {
   } = useSelector(state=>state.admin.show);
   const dispatch = useDispatch();
   // temporarily disable eslint while form not submittable
-  /* eslint-disable no-unused-vars */
   let {id} = useParams();
   let [title, setTitle] = useState("");
+  let [genre, setGenre] = useState("");
   let [runtimeMinutes, setRuntimeMinutes] = useState("");
+  let [gross, setGross] = useState("");
   let [releaseYear, setReleaseYear] =  useState("");
   let [releaseMonth, setReleaseMonth] = useState("");
   let [releaseDay, setReleaseDay] = useState("");
@@ -48,6 +49,8 @@ export default function Edit()  {
       releaseDateObject = new Date(show.released);
       console.debug(releaseDateObject);
       setTitle(show.title);
+      setGenre(show.genre);
+      setGross(show.grossIncome ?? "0");
       setRuntimeMinutes(show.runtimeMinutes);
       setReleaseYear(releaseDateObject.getFullYear());
       setReleaseDay(releaseDateObject.getDay());
@@ -89,6 +92,8 @@ export default function Edit()  {
     console.debug(e.target);
     let formData = new FormData();
     formData.set('title', title);
+    formData.set('genre', genre);
+    formData.set('grossIncome', gross);
     formData.set('runtimeMinutes',runtimeMinutes);
     formData.set(
       "released",new Date(
@@ -113,7 +118,7 @@ export default function Edit()  {
     <Form onSubmit={submitHandler}>
       <FloatingLabel 
         className="mb-4" 
-        controlId="createShowTitle" 
+        controlId="editShowTitle" 
         label="Title">
         {/* idea: pull a random title from list of added as placeholder? */}
         <Form.Control 
@@ -125,9 +130,24 @@ export default function Edit()  {
           required
         />
       </FloatingLabel>
+      
+      <FloatingLabel 
+        className="mb-4" 
+        controlId="editShowGenre" 
+        label="Genre">
+        
+        <Form.Control 
+          type="text" 
+          name="genre" 
+          placeholder="Genre"
+          onChange={e=>setGenre(e.target.value)} 
+          value={genre}
+          required
+        />
+      </FloatingLabel>
       <FloatingLabel  
         className="mb-4" 
-        controlId="createMovieYear" 
+        controlId="editMovieYear" 
         label="Runtime (minutes)">
         
         <Form.Control 
@@ -138,6 +158,20 @@ export default function Edit()  {
             parseInt(e.target.value)
           )}
           value={runtimeMinutes}
+          required
+        />
+      </FloatingLabel>
+      <FloatingLabel  
+        className="mb-4" 
+        controlId="editMovieGross" 
+        label="Gross Income">
+        
+        <Form.Control 
+          type="number" 
+          name="grossIncome" 
+          placeholder="Gross Income"
+          onChange={e=>setGross(e.target.value)}
+          value={gross}
           required
         />
       </FloatingLabel>
@@ -154,7 +188,7 @@ export default function Edit()  {
       </div>
       <Form.Group
         className="mb-3" 
-        controlId="createShowPlot" 
+        controlId="editShowPlot" 
       >
         <Form.Label>Plot</Form.Label>
         <Form.Control 

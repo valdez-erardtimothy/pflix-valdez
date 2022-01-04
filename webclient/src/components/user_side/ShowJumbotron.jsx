@@ -1,5 +1,8 @@
 import React from 'react';
 import {Stack, Image} from 'react-bootstrap';
+
+import { toShorthand } from '../../helpers/numberHelper';
+
 export default function ShowJumbotron({show}) {
   return <Stack direction="horizontal"
     className='bg-dark text-light p-3 me-4 align-items-start' 
@@ -26,6 +29,7 @@ export default function ShowJumbotron({show}) {
       <p>Released: {(new Date(show.released)).toDateString()}</p>
       <p>{show.genre}</p>
       <p>{show.runtimeMinutes} minutes</p>
+      <p>Gross income: ${toShorthand(show.grossIncome)}</p>
       <p>{show.plot}</p>
     </div>         
   </Stack>;
