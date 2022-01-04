@@ -35,7 +35,7 @@ showController.titles = async (req, res, next) => {
 }
 
 showController.create = async (req, res) => {
-  let { title, genre, released, runtimeMinutes, plot, showType } = req.body;
+  let { title, genre, grossIncome, released, runtimeMinutes, plot, showType } = req.body;
   let uploads = req.files?.images;
   let imgPaths = [];
   if (uploads !== undefined) {
@@ -52,6 +52,7 @@ showController.create = async (req, res) => {
     genre: genre,
     released: released,
     runtimeMinutes: runtimeMinutes,
+    grossIncome: grossIncome,
     plot: plot,
     showType: showType,
     images: imgPaths
