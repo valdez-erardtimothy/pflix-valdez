@@ -31,6 +31,10 @@ const showSchema = Schema({
     type: String,
     required: false
   },
+  grossIncome: {
+    type: Number,
+    required: true
+  },
   reviews: [
     {
       user: {
