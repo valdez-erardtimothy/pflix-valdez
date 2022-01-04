@@ -20,6 +20,8 @@ const dashboardSlice = createSlice({
     topTv: [],
     popularMovieGenre: [],
     popularTvGenre: [],
+    topGrossingMovie: [],
+    topGrossingTv: [],
     loadStatus:"idle"
   },
   reducers: {
@@ -43,6 +45,8 @@ const dashboardSlice = createSlice({
         state.topTv = data.topTv;
         state.popularTvGenre = data.tvGenreRanking; 
         state.popularMovieGenre = data.movieGenreRanking;
+        state.topGrossingMovie = data.topMovieGross;
+        state.topGrossingTv = data.topTvGross;
       }) 
       .addCase(load.rejected, (state) => {
         state.loadStatus="failed";

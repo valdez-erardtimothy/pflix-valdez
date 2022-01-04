@@ -47,6 +47,18 @@ dashboardController.loadDashboard = async function (req, res, next) {
     },
     { $sort: { avgRatings: -1 } }
   ]);
+  let topTvGrossQuery = showModel.find()
+    .where({ showType: "TV Show" })
+    .select('_id title grossIncome')
+    .sort({ grossIncome: -1 })
+    .limit(10)
+    .exec();
+  let topMovieGrossQuery = showModel.find()
+    .where({ showType: "Movie" })
+    .select('_id title grossIncome')
+    .sort({ grossIncome: -1 })
+    .limit(10)
+    .exec();
 
 
   try {
@@ -57,14 +69,18 @@ dashboardController.loadDashboard = async function (req, res, next) {
       topTv,
       topActors,
       tvGenreRanking,
-      movieGenreRanking
+      movieGenreRanking,
+      topTvGross,
+      topMovieGross
     ] = await Promise.all([
       showCountQuery,
       topMoviesQuery,
       topTvQuery,
       topActorsQuery,
       topTvGenreQuery,
-      topMovieGenreQuery
+      topMovieGenreQuery,
+      topTvGrossQuery,
+      topMovieGrossQuery
     ]);
 
     // transform showCount to format : {tv:count, movie:count, total:count}
@@ -74,25 +90,15 @@ dashboardController.loadDashboard = async function (req, res, next) {
     }
     showCount.total = showCount.tv + showCount.movie
 
-    // // transform tv genre ranking
-    // let tvGenreRankingArr = { total: 0 };
-    // tvGenreRanking.forEach(genre => {
-    //   tvGenreRankingArr.total += genre.count;
-    //   tvGenreRankingArr[genre._id] = { ...genre }
-    // })
-    // let movieGenreRankingArr = { total: 0 };
-    // movieGenreRanking.forEach(genre => {
-    //   movieGenreRankingArr.total += genre.count;
-    //   movieGenreRankingArr[genre._id] = genre.count
-    // })
-
     res.status(200).send({
       showCount,
       topMovies,
       topTv,
       topActors,
       tvGenreRanking,
-      movieGenreRanking
+      movieGenreRanking,
+      topTvGross,
+      topMovieGross
     })
   } catch (e) {
     return next(e);

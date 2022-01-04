@@ -14,7 +14,7 @@ import { Chart as ChartJS,
   LineElement,
   RadialLinearScale
 } from 'chart.js';
-import {Doughnut, Chart, PolarArea} from 'react-chartjs-2';
+import {Doughnut, Chart, PolarArea, Bar as BarChart} from 'react-chartjs-2';
 
 /* action import */
 import {load} from '../../features/admin/dashboardSlice';
@@ -22,6 +22,7 @@ import {startLoad, endLoad} from '../../features/loadingSlice';
 
 /* helper import */
 import {generateRGBAStrings} from '../../helpers/colorGenerator';
+import { toShorthand } from '../../helpers/numberHelper';
 
 ChartJS.register(ArcElement,
   Tooltip, 
@@ -50,7 +51,9 @@ export default function Dashboard() {
     topMovies,
     topTv,
     popularTvGenre,
-    popularMovieGenre
+    popularMovieGenre,
+    topGrossingTv, 
+    topGrossingMovie
   } = useSelector(state=>state.admin.dashboard);
 
   /* effects */
@@ -210,6 +213,20 @@ export default function Dashboard() {
       }};
   };
 
+  const topGrossingProps = (shows, label) => {
+    console.debug('topgressing shows', shows);
+    return {
+      data: {
+        labels: shows.map(show=>show.title),
+        datasets: [{
+          label:label,
+          data:shows.map(show=>show.grossIncome),
+          ...generateRGBAStrings(1)
+        }]
+      }
+    };
+  };
+
   useEffect(()=> {
     let isLoaded = loadStatus !== "loading";
     if(isLoaded) { 
@@ -364,13 +381,83 @@ export default function Dashboard() {
             </Row>
           </div>
           <Row>
-            <Col sm="6" lg="3">
+            <Col sm="6" lg="5">
               <h4>Top Movie Genres</h4>
               <PolarArea {...topMovieGenresObject({genres: popularMovieGenre})}/>
             </Col>
-            <Col sm="6" lg="3">
+            <Col sm="6" lg="5">
               <h4>Top TV Genres</h4>
               <PolarArea {...topTvGenresObject({genres:popularTvGenre})}/>
+            </Col>
+          </Row>
+          <Row className="mt-4">
+            <Col md="6">
+              <Row>
+                <Col 
+                  className="mt-2"
+                  md="6"
+                >
+                  <h4>Top Grossing Movies</h4>
+                  <Table size="sm" borderless striped>
+                    <thead>
+                      <tr>
+                        <th>Movie</th>
+                        <th>Gross Income</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {topGrossingMovie.map(movie=>(
+                        <tr key={movie._id}>
+                          <td>
+                            <Link to={`/admin/shows/${movie._id}`}
+                              className='no-text-decoration'
+                            >{movie.title}
+                            </Link>
+                          </td>
+                          <td>${toShorthand(movie.grossIncome)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </Col>
+                <Col 
+                  className="mt-2"
+                  lg="6"
+                >
+                  
+                  <h4>Top Grossing TV Shows</h4>
+                  <Table size="sm" borderless striped>
+                    <thead>
+                      <tr>
+                        <th>TV Show</th>
+                        <th>Gross Income</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {topGrossingTv.map(tv=>(
+                        <tr key={tv._id}>
+                          
+                          <td>
+                            <Link to={`/admin/shows/${tv._id}`}
+                              className='no-text-decoration'
+                            >{tv.title}
+                            </Link>
+                          </td>
+                          <td>${toShorthand(tv.grossIncome)}</td>
+                        </tr>
+                      ))}
+                    </tbody>
+                  </Table>
+                </Col>
+              </Row>
+            </Col>
+            <Col lg="6">
+              <div>
+                <BarChart {...topGrossingProps(topGrossingMovie, "Top Grossing Movies")}/>
+              </div>
+              <div>
+                <BarChart {...topGrossingProps(topGrossingTv, "Top Grossing TV SHows")}/>
+              </div>
             </Col>
 
           </Row>
