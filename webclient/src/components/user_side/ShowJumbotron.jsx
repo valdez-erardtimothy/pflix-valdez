@@ -29,7 +29,7 @@ export default function ShowJumbotron({show}) {
       <p>Released: {(new Date(show.released)).toDateString()}</p>
       <p>{show.genre}</p>
       <p>{show.runtimeMinutes} minutes</p>
-      <p>Gross income: ${toShorthand(show.grossIncome)}</p>
+      <p>Gross income: ${toShorthand(show.grossIncome).toString()}</p>
       <p>{show.plot}</p>
     </div>         
   </Stack>;

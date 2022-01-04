@@ -3,13 +3,14 @@ import React, {useEffect} from 'react';
 import { useParams, useNavigate, Link } from 'react-router-dom';
 import { useDispatch, useSelector } from 'react-redux';
 import { useAlert } from 'react-alert';
-import {Button, Image,  Form, FloatingLabel, Stack} from 'react-bootstrap';
+import {Button, Image,  Form, FloatingLabel, Stack, ListGroup} from 'react-bootstrap';
 /* component import */
 import ShowJumbotron from '../components/user_side/ShowJumbotron';
 import Review from '../components/user_side/Review';
 /* action import */
 import {clearDeleteReviewStatus, load, review, deleteReview, clearReviewStatus} from '../features/showSlice';
 import { startLoad,endLoad } from '../features/loadingSlice';
+import { Helmet } from 'react-helmet-async';
 
 export default function ShowDetails() {
   /* hooks */
@@ -88,6 +89,9 @@ export default function ShowDetails() {
   return <>
     {show && (
       <>
+        <Helmet>
+          <title>{show.title} | PFlix</title>
+        </Helmet>
         <ShowJumbotron show={show}/>
         <h4>Cast</h4>
         <Stack 
@@ -106,6 +110,15 @@ export default function ShowDetails() {
               </div>
             </Link>
           ))}</Stack>
+        <h4 className="mt-4">Producers</h4>
+        <ListGroup style={{height:"300px"}}
+          className="overflow-scroll">
+          {show.producers.map(producer => (
+            <ListGroup.Item key={producer.producer._id}>
+              {producer.producer.name}
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
         <h4 className='mt-5 mb-2'>Reviews</h4>
         {/* start of user review */}
         {authenticated ? <> 

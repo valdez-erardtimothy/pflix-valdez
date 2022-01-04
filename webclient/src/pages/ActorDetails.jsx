@@ -16,6 +16,7 @@ import {
   clearReviewStatus
 } from '../features/actorSlice';
 import { startLoad,endLoad } from '../features/loadingSlice';
+import { Helmet } from 'react-helmet-async';
 
 export default function ActorDetails() {
   /* hooks */
@@ -94,6 +95,9 @@ export default function ActorDetails() {
   return <>
     {actor && (
       <>
+        <Helmet>
+          <title>{actor.name} | Actors</title>
+        </Helmet>
         <ActorJumbotron actor={actor}/>
         <h4>Filmography</h4>
         <Stack 

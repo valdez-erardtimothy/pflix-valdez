@@ -1,4 +1,5 @@
 const showModel = require('../models/show');
+const showProducerModel = require('../models/showProducer');
 const filmographyModel = require('../models/filmography')
 /* 
 internal methods 
@@ -23,6 +24,9 @@ const getShow = function (id, user) {
         let cast = await filmographyModel.find({ show: show._id })
           .populate('actor')
           .exec();
+        let producers = await showProducerModel.find({ show: show._id })
+          .populate('producer')
+          .exec();
         // transforms
         show = show.toObject();
         if (user) {
@@ -31,6 +35,7 @@ const getShow = function (id, user) {
           );
         }
         show.cast = cast;
+        show.producers = producers;
         return resolve(show);
       });
   })

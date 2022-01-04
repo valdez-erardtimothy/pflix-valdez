@@ -6,6 +6,7 @@ import { login, clearLoginAttemptStatus } from '../../features/authSlice';
 import {startLoad, endLoad} from '../../features/loadingSlice';
 import {useAlert} from 'react-alert';
 import '../../css/google-signon.css';
+import { Helmet } from 'react-helmet-async';
 export default function Login() {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -58,6 +59,9 @@ export default function Login() {
   };
   return (
     <>
+      <Helmet>
+        <title>Log In</title>
+      </Helmet>
       <Container as="main" className="min-vh-100" fluid>
         <Container size="sm" className="mt-auto">
           <h1>Login</h1>

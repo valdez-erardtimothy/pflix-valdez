@@ -1,6 +1,6 @@
 {
   "name": "server",
-  "version": "0.1.0",
+  "version": "1.0.0",
   "description": "backend for pflix",
   "main": "src/server.js",
   "scripts": {
