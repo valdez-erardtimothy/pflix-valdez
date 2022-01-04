@@ -2,3 +2,4 @@
 !format.env
 
 **/assets/uploads
+!**/assets/uploads/**/.unignore
