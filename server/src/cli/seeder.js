@@ -25,7 +25,8 @@ const seeder = async () => {
       return Promise.all([
         require(`${seederPath}/showReviewSeed.js`).seed(),
         require(`${seederPath}/actorReviewSeed.js`).seed(),
-        require(`${seederPath}/filmographySeed.js`).seed()
+        require(`${seederPath}/filmographySeed.js`).seed(),
+        require(`${seederPath}/grossIncomeSeed.js`).seed()
       ])
     });
 

@@ -33,7 +33,7 @@ const showSchema = Schema({
   },
   grossIncome: {
     type: Number,
-    required: true
+    required: false
   },
   reviews: [
     {
