@@ -5,6 +5,7 @@ import { useNavigate } from 'react-router';
 import {register, clearRegisterStatus} from '../../features/authSlice';
 import { startLoad, endLoad } from '../../features/loadingSlice';
 import { useAlert } from 'react-alert';
+import { Helmet } from 'react-helmet-async';
 export default function Register() {
   const dispatch = useDispatch();
   const alert = useAlert();
@@ -41,63 +42,68 @@ export default function Register() {
     dispatch(register(formData));
   };
 
-  return <Container fluid="sm">
-    <h3>Register</h3>
-    <Form onSubmit={submitHandler}>
-      <FloatingLabel
-        label="Name" 
-        controlId="register-name"
-        className="mb-3"
-      >
-        <Form.Control 
-          type="text" 
-          name="name" 
-          placeholder="Name"
-          required
-        />
-      </FloatingLabel>
-      <FloatingLabel
-        label="username" 
-        controlId="register-uname"
-        className="mb-3"
-      >
-        <Form.Control 
-          type="text" 
-          name="username" 
-          placeholder="username"
-          minLength="6"
-          required
-        />
-      </FloatingLabel>
-      <FloatingLabel
-        label="E-mail" 
-        controlId="register-email"
-        className="mb-3"
-      >
-        <Form.Control 
-          type="email" 
-          name="email" 
-          placeholder="E-mail"
-          required
-        />
-      </FloatingLabel>
-      
-      <FloatingLabel
-        label="Password" 
-        controlId="register-password"
-        className="mb-3"
-      >
-        <Form.Control 
-          type="password" 
-          name="password" 
-          placeholder="Password"
-          required
-          minLength='8'
-        />
-      </FloatingLabel>
-      <Button type="submit">
-        Register
-      </Button>
-    </Form>
-  </Container>;
+  return <>
+    <Helmet>
+      <title>Register</title>
+    </Helmet>
+    <Container fluid="sm">
+      <h3>Register</h3>
+      <Form onSubmit={submitHandler}>
+        <FloatingLabel
+          label="Name" 
+          controlId="register-name"
+          className="mb-3"
+        >
+          <Form.Control 
+            type="text" 
+            name="name" 
+            placeholder="Name"
+            required
+          />
+        </FloatingLabel>
+        <FloatingLabel
+          label="username" 
+          controlId="register-uname"
+          className="mb-3"
+        >
+          <Form.Control 
+            type="text" 
+            name="username" 
+            placeholder="username"
+            minLength="6"
+            required
+          />
+        </FloatingLabel>
+        <FloatingLabel
+          label="E-mail" 
+          controlId="register-email"
+          className="mb-3"
+        >
+          <Form.Control 
+            type="email" 
+            name="email" 
+            placeholder="E-mail"
+            required
+          />
+        </FloatingLabel>
+    
+        <FloatingLabel
+          label="Password" 
+          controlId="register-password"
+          className="mb-3"
+        >
+          <Form.Control 
+            type="password" 
+            name="password" 
+            placeholder="Password"
+            required
+            minLength='8'
+          />
+        </FloatingLabel>
+        <Button type="submit">
+      Register
+        </Button>
+      </Form>
+    </Container>
+  </>;
 }

@@ -14,6 +14,7 @@ import SearchShow from '../components/SearchBox';
 import '../css/search-page.css';
 import ShowList from '../components/user_side/ShowList';
 import ActorList from '../components/user_side/ActorList';
+import { Helmet } from 'react-helmet-async';
 
 
 export default function SearchPage(){
@@ -95,6 +96,9 @@ export default function SearchPage(){
 
   /* render */
   return <>
+    <Helmet>
+      <title>Search: {currentKeyword ?? "N/A"} | Pflix</title>
+    </Helmet>
     <div className="mb-5">
       <SearchShow/>
     </div>

@@ -10,6 +10,7 @@ import Review from '../components/user_side/Review';
 /* action import */
 import {clearDeleteReviewStatus, load, review, deleteReview, clearReviewStatus} from '../features/showSlice';
 import { startLoad,endLoad } from '../features/loadingSlice';
+import { Helmet } from 'react-helmet-async';
 
 export default function ShowDetails() {
   /* hooks */
@@ -88,6 +89,9 @@ export default function ShowDetails() {
   return <>
     {show && (
       <>
+        <Helmet>
+          <title>{show.title} | PFlix</title>
+        </Helmet>
         <ShowJumbotron show={show}/>
         <h4>Cast</h4>
         <Stack 
