@@ -16,19 +16,19 @@ actorController.list = async (req, res, next) => {
 };
 
 actorController.create = async (req, res, next) => {
-  let imgPaths = [];
-  let fields = req.body;
-  // handle uploads
-  let uploads = req.files?.images;
-  if (uploads !== undefined) {
-    if (!Array.isArray(uploads)) {
-      uploads = [uploads]
-    }
-    await Promise.all(uploads.map(async (img) => {
-      imgPaths.push(await saveUpload(img, 'uploads/actors'));
-    }));
-  }
   try {
+    let imgPaths = [];
+    let fields = req.body;
+    // handle uploads
+    let uploads = req.files?.images;
+    if (uploads !== undefined) {
+      if (!Array.isArray(uploads)) {
+        uploads = [uploads]
+      }
+      await Promise.all(uploads.map(async (img) => {
+        imgPaths.push(await saveUpload(img, 'uploads/actors'));
+      }));
+    }
 
     const newActor = await actor.create({ ...fields, images: imgPaths });
     return res.status(201).json({ actor: newActor });

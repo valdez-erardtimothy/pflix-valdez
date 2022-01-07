@@ -13,7 +13,8 @@ showController.read = async (req, res) => {
   let { id } = req.params;
   show.findById(id, async function (err, data) {
     if (err) {
-      return res.status(500).send(err);
+      // return res.status(500).send(err);
+      return next(err);
     }
     data = data.toObject();
     data.cast = await filmography.find({ show: data._id })
@@ -35,17 +36,19 @@ showController.titles = async (req, res, next) => {
 }
 
 showController.create = async (req, res) => {
-  let { title, genre, grossIncome, released, runtimeMinutes, plot, showType } = req.body;
-  let uploads = req.files?.images;
-  let imgPaths = [];
-  if (uploads !== undefined) {
-    if (!Array.isArray(uploads)) {
-      uploads = [uploads]
+  try {
+    let { title, genre, grossIncome, released, runtimeMinutes, plot, showType } = req.body;
+    let uploads = req.files?.images;
+    let imgPaths = [];
+    if (uploads !== undefined) {
+      if (!Array.isArray(uploads)) {
+        uploads = [uploads]
+      }
+      await Promise.all(uploads.map(async (img) => {
+        imgPaths.push(await saveUpload(img, 'uploads/shows'));
+      }))
     }
-    await Promise.all(uploads.map(async (img) => {
-      imgPaths.push(await saveUpload(img, 'uploads/shows'));
-    }))
-  }
+  } catch (e) { return next(e) }
 
   show.create({
     title: title,
@@ -77,22 +80,22 @@ showController.destroy = async (req, res) => {
 };
 
 showController.update = async (req, res) => {
-  let { id } = req.params;
-  let formData = req.body;
-  let showData = show.findById(id);
-  let images = showData.images || [];
-  let uploads = req.files?.images;
-  if (uploads !== undefined) {
-    if (!Array.isArray(uploads)) {
-      uploads = [uploads]
+  try {
+    let { id } = req.params;
+    let formData = req.body;
+    let showData = show.findById(id);
+    let images = showData.images || [];
+    let uploads = req.files?.images;
+    if (uploads !== undefined) {
+      if (!Array.isArray(uploads)) {
+        uploads = [uploads]
+      }
+      await Promise.all(uploads.map(async (img) => {
+        images.push(await saveUpload(img, 'uploads/shows'));
+      }))
+      formData = { ...formData, images }
     }
-
-    await Promise.all(uploads.map(async (img) => {
-      images.push(await saveUpload(img, 'uploads/shows'));
-    }))
-    formData = { ...formData, images }
-
-  }
+  } catch (e) { return next(e) }
 
   show.findByIdAndUpdate(id, formData, function (err, show) {
     if (err) {

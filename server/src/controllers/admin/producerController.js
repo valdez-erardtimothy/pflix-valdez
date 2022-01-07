@@ -24,19 +24,19 @@ producerController.read = async (req, res, next) => {
 }
 
 producerController.create = async (req, res, next) => {
-  let imgPaths = [];
-  let fields = req.body;
-  let uploads = req.files?.images
-  // handle image uploads
-  if (uploads !== undefined) {
-    if (!Array.isArray(uploads)) {
-      uploads = [uploads];
-    }
-    await Promise.all(uploads.map(async (img) => {
-      imgPaths.push(await saveUpload(img, 'uploads/producers'));
-    }));
-  }
   try {
+    let imgPaths = [];
+    let fields = req.body;
+    let uploads = req.files?.images
+    // handle image uploads
+    if (uploads !== undefined) {
+      if (!Array.isArray(uploads)) {
+        uploads = [uploads];
+      }
+      await Promise.all(uploads.map(async (img) => {
+        imgPaths.push(await saveUpload(img, 'uploads/producers'));
+      }));
+    }
     const newProducer = await producer.create({ ...fields, images: imgPaths });
     return res.status(201).json({ producer: newProducer });
   } catch (e) { return next(e); }
@@ -70,28 +70,29 @@ producerController.update = async (req, res, next) => {
       return next(loadErr);
     }
 
-    // handle uploads
-    if (uploads !== undefined) {
-      // delete existing pics
-      if (data?.images?.length > 0) {
-        await Promise.all(
-          data.images.map(
-            async (url) => { await removeUploaded(url); }
-          )
-        );
-      }
-      // save all uploads
-      if (!Array.isArray(uploads)) {
-        uploads = [uploads]
-      }
-      await Promise.all(uploads.map(async (img) => {
-        imgPaths.push(await saveUpload(img, 'uploads/actors'));
-      }));
-      // add image URL array to document
-      fields = { ...fields, images: imgPaths };
-    }
-    data.overwrite(fields);
     try {
+
+      // handle uploads
+      if (uploads !== undefined) {
+        // delete existing pics
+        if (data?.images?.length > 0) {
+          await Promise.all(
+            data.images.map(
+              async (url) => { await removeUploaded(url); }
+            )
+          );
+        }
+        // save all uploads
+        if (!Array.isArray(uploads)) {
+          uploads = [uploads]
+        }
+        await Promise.all(uploads.map(async (img) => {
+          imgPaths.push(await saveUpload(img, 'uploads/actors'));
+        }));
+        // add image URL array to document
+        fields = { ...fields, images: imgPaths };
+      }
+      data.overwrite(fields);
       const updated = await data.save();
       await showProducer.deleteMany({ producer: id });
       await showProducer.insertMany(showProducerData);
