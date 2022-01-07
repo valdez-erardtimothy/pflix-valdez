@@ -75,7 +75,7 @@ showController.create = async (req, res, next) => {
 
 };
 
-showController.destroy = async (req, res) => {
+showController.destroy = async (req, res, next) => {
   try {
     let { id } = req.params;
     show.findOneAndDelete({ _id: id }, async function (err, data) {
@@ -88,7 +88,7 @@ showController.destroy = async (req, res) => {
   } catch (e) { return next(e) }
 };
 
-showController.update = async (req, res) => {
+showController.update = async (req, res, next) => {
   try {
     let { id } = req.params;
     let formData = req.body;
