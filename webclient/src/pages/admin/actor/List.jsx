@@ -43,7 +43,8 @@ export default function List() {
       break;
     case 'success':
     case 'failed':
-      dispatch(endLoad());  
+      dispatch(endLoad()); 
+      alert.error('Error in loading actor.'); 
       break;
     default:
       break;
@@ -65,6 +66,7 @@ export default function List() {
       break;
     case 'failed':
       alert.error('Delete actor failed');
+      dispatch(clearDeleteStatus());
       dispatch(endLoad());  
       break;
     default:
