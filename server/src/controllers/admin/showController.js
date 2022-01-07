@@ -4,27 +4,33 @@ const showProducer = require('../../models/showProducer.js');
 const { saveUpload } = require('../../utils/assetHandler');
 const showController = {};
 
-showController.list = async (req, res) => {
-  let shows = await show.find().sort({ released: -1 });
-  res.status(200).json({ shows: shows });
+showController.list = async (req, res, next) => {
+  try {
+    let shows = await show.find().sort({ released: -1 });
+    res.status(200).json({ shows: shows });
+
+  } catch (e) { return next(e) }
 };
 
-showController.read = async (req, res) => {
-  let { id } = req.params;
-  show.findById(id, async function (err, data) {
-    if (err) {
-      // return res.status(500).send(err);
-      return next(err);
-    }
-    data = data.toObject();
-    data.cast = await filmography.find({ show: data._id })
-      .populate('actor')
-      .exec();
-    data.producers = await showProducer.find({ show: data._id })
-      .populate('producer')
-      .exec();
-    return res.status(200).send({ show: data });
-  });
+showController.read = async (req, res, next) => {
+  try {
+    let { id } = req.params;
+    show.findById(id, async function (err, data) {
+      if (err) {
+        // return res.status(500).send(err);
+        return next(err);
+      }
+      data = data.toObject();
+      data.cast = await filmography.find({ show: data._id })
+        .populate('actor')
+        .exec();
+      data.producers = await showProducer.find({ show: data._id })
+        .populate('producer')
+        .exec();
+      return res.status(200).send({ show: data });
+    });
+  } catch (e) { return next(e) }
+
 };
 
 showController.titles = async (req, res, next) => {
@@ -35,7 +41,7 @@ showController.titles = async (req, res, next) => {
   });
 }
 
-showController.create = async (req, res) => {
+showController.create = async (req, res, next) => {
   try {
     let { title, genre, grossIncome, released, runtimeMinutes, plot, showType } = req.body;
     let uploads = req.files?.images;
@@ -48,35 +54,38 @@ showController.create = async (req, res) => {
         imgPaths.push(await saveUpload(img, 'uploads/shows'));
       }))
     }
+    show.create({
+      title: title,
+      genre: genre,
+      released: released,
+      runtimeMinutes: runtimeMinutes,
+      grossIncome: grossIncome,
+      plot: plot,
+      showType: showType,
+      images: imgPaths
+    }, function (err, data) {
+      if (err) return res.status(422).send({
+        error: err,
+        request: req.body
+      });
+      return res.status(200).send({ show: data });
+    });
   } catch (e) { return next(e) }
 
-  show.create({
-    title: title,
-    genre: genre,
-    released: released,
-    runtimeMinutes: runtimeMinutes,
-    grossIncome: grossIncome,
-    plot: plot,
-    showType: showType,
-    images: imgPaths
-  }, function (err, data) {
-    if (err) res.status(422).send({
-      error: err,
-      request: req.body
-    });
-    res.status(200).send({ show: data });
-  });
+
 };
 
 showController.destroy = async (req, res) => {
-  let { id } = req.params;
-  show.findOneAndDelete({ _id: id }, async function (err, data) {
-    if (err) {
-      return res.status(400).send("error in deleting show!", err);
-    }
-    await filmography.deleteMany({ show: id });
-    res.status(200).send({ show: data });
-  });
+  try {
+    let { id } = req.params;
+    show.findOneAndDelete({ _id: id }, async function (err, data) {
+      if (err) {
+        return res.status(400).send("error in deleting show!", err);
+      }
+      await filmography.deleteMany({ show: id });
+      res.status(200).send({ show: data });
+    });
+  } catch (e) { return next(e) }
 };
 
 showController.update = async (req, res) => {
@@ -95,20 +104,21 @@ showController.update = async (req, res) => {
       }))
       formData = { ...formData, images }
     }
+
+    show.findByIdAndUpdate(id, formData, function (err, show) {
+      if (err) {
+        return res.status(422).send(err);
+      } else {
+        return res.status(200).send(
+          {
+            message: "Successfully updated show!",
+            show: show
+          }
+        )
+      }
+    });
   } catch (e) { return next(e) }
 
-  show.findByIdAndUpdate(id, formData, function (err, show) {
-    if (err) {
-      res.status(422).send(err);
-    } else {
-      res.status(200).send(
-        {
-          message: "Successfully updated show!",
-          show: show
-        }
-      )
-    }
-  });
 }
 
 module.exports = showController;
