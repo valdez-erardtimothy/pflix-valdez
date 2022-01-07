@@ -76,7 +76,7 @@ export default function ActorDetails() {
       dispatch(endLoad());
     } else {dispatch(startLoad());}
     if(deleteReviewStatus === "failed") {
-      alert.error('Error in deleteting review data');
+      alert.error('Error in deleting review data');
       navigate('/');
     }
   }, [deleteReviewStatus]);

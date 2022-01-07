@@ -25,8 +25,8 @@ export default function List() {
   useEffect(()=> {
     dispatch(load());
     return () => {
-      dispatch(clearLoadStatus);
-      dispatch(clearLoaded);
+      dispatch(clearLoadStatus());
+      dispatch(clearLoaded());
     };  
   }, []);
 
