@@ -42,6 +42,8 @@ export default function List() {
       dispatch(startLoad());
       break;
     case 'success':
+      dispatch(endLoad()); 
+      break;
     case 'failed':
       dispatch(endLoad()); 
       alert.error('Error in loading actor.'); 
