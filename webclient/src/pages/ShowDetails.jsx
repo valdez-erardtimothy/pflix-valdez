@@ -119,7 +119,6 @@ export default function ShowDetails() {
             </ListGroup.Item>
           ))}
         </ListGroup>
-        <h4 className='mt-5 mb-2'>Reviews</h4>
         {/* start of user review */}
         {authenticated ? <> 
           <div className="border p-2 ms-2">
@@ -181,13 +180,18 @@ export default function ShowDetails() {
         }
         {/* end of user review */}
         {show.reviews && (
-          <div className="overflow-scroll mb-5"style={{height:"300px"}}>
-            { show.reviews.map(review=>(
-              <div key={review.user._id} className="mb-2">
-                <Review review={review}/>
-              </div>
-            ))}
-          </div>
+          <>
+            <h4 className="mt-4">Reviews</h4>
+            <div className="overflow-scroll border mb-5 ms-2 p-2
+              "style={{height:"300px"}}>
+            
+              { show.reviews.map(review=>(
+                <div key={review.user._id} className="mb-2">
+                  <Review review={review}/>
+                </div>
+              ))}
+            </div>
+          </>
         )}
       </>
     )}
