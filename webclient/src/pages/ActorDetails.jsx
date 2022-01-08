@@ -178,11 +178,15 @@ export default function ActorDetails() {
         </>
         }
         {/* end of user review */}
-        {actor.reviews && actor.reviews.map(review=>(
-          <div key={review.user._id} className="mb-2">
-            <Review review={review}/>
-          </div>
-        ))}
+        
+        {actor.reviews && (
+          <div className="overflow-scroll" style={{height:"300px"}}>
+            {actor.reviews.map(review=>(
+              <div key={review.user._id} className="mb-2">
+                <Review review={review}/>
+              </div>
+            ))}
+          </div>) }
       </>
     )}
   </>;

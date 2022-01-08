@@ -180,11 +180,15 @@ export default function ShowDetails() {
         </>
         }
         {/* end of user review */}
-        {show.reviews && show.reviews.map(review=>(
-          <div key={review.user._id} className="mb-2">
-            <Review review={review}/>
+        {show.reviews && (
+          <div className="overflow-scroll mb-5"style={{height:"300px"}}>
+            { show.reviews.map(review=>(
+              <div key={review.user._id} className="mb-2">
+                <Review review={review}/>
+              </div>
+            ))}
           </div>
-        ))}
+        )}
       </>
     )}
   </>;
