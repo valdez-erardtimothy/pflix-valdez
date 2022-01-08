@@ -48,14 +48,15 @@ showController.list = async (req, res, next) => {
   let skip = parseInt(req.query.skip) || 0;
   let itemsPerPage = parseInt(req.query.limit) || 10;
 
-  let showsQuery = showModel
-    .find()
-    .sort({ released: -1 })
-    .skip(skip)
-    .limit(itemsPerPage)
-    .exec();
+
 
   try {
+    let showsQuery = showModel
+      .find()
+      .sort({ released: -1 })
+      .skip(skip)
+      .limit(itemsPerPage)
+      .exec();
     const [count, shows] = await Promise.all([
       showModel.count(),
       showsQuery

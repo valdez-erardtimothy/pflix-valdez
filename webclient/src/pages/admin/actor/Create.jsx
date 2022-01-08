@@ -39,6 +39,7 @@ export default function Create() {
       navigate('/admin/actors');
       break;
     case"failed":
+      alert.error('Failed creating actor');
       dispatch(endLoad());
       break;
     }

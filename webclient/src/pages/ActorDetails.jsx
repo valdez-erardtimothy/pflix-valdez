@@ -76,7 +76,7 @@ export default function ActorDetails() {
       dispatch(endLoad());
     } else {dispatch(startLoad());}
     if(deleteReviewStatus === "failed") {
-      alert.error('Error in deleteting review data');
+      alert.error('Error in deleting review data');
       navigate('/');
     }
   }, [deleteReviewStatus]);
@@ -117,7 +117,6 @@ export default function ActorDetails() {
             </Link>
           ))}
         </Stack>
-        <h4 className='mt-5 mb-2'>Reviews</h4>
         {/* start of user review */}
         {authenticated ? <> 
           <div className="border p-2 ms-2">
@@ -178,11 +177,18 @@ export default function ActorDetails() {
         </>
         }
         {/* end of user review */}
-        {actor.reviews && actor.reviews.map(review=>(
-          <div key={review.user._id} className="mb-2">
-            <Review review={review}/>
+        
+        <h4 className='mt-5 mb-2'>Reviews</h4>
+        {actor.reviews && (<>
+          <div className="overflow-scroll border" style={{height:"300px"}}>
+            {actor.reviews.map(review=>(
+              <div key={review.user._id} className="mb-2">
+                <Review review={review}/>
+              </div>
+            ))}
           </div>
-        ))}
+        </>
+        ) }
       </>
     )}
   </>;

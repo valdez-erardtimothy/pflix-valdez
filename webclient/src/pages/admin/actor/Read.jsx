@@ -63,7 +63,6 @@ export default function Read() {
     case "failed":
       dispatch(endLoad());
       alert.error("Error in deleting actor data from API.");
-      alert;
     }
   }, [deleteStatus]);
 
